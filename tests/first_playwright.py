@@ -1,10 +1,13 @@
 from playwright.sync_api import Playwright, sync_playwright, expect, Page, Response, Request
 
 
+
 def run(playwright: Playwright) -> None:
     done = "What needs to be done?"
     browser = playwright.firefox.launch(headless=False)
-    context = browser.new_context()
+    context = browser.new_context(
+      record_video_dir="videos/",
+      record_video_size={"width": 640, "height": 480})
     context.on("page", handle_page)
     context.on("request", handle_request)
     context.on("response", handle_response)
