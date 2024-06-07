@@ -5,6 +5,7 @@ local.properties
 
 # Log file
 *.log
+*.webm
 *.log.*
 test-log.txt
 
@@ -13,6 +14,8 @@ test-log.txt
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
+test-results/
+video/
 
 # Package Files #
 *.jar

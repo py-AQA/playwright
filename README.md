@@ -17,4 +17,4 @@ playwright sandbox
 
 `pytest --slowmo 1000`
 
-`pytest --video=on`
+`pytest --video=on --full-page-screenshot`

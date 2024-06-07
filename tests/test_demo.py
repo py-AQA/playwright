@@ -9,7 +9,15 @@ def test_page(page: Page):
     page.get_by_placeholder('Search').fill('search')
     page.locator('.input-group-btn').click()
     print(page.url)
-    # page.pause()
+    print(page.video.path())
+
+# def test_page_error(page: Page):
+#
+#     page.goto(base_url)
+#     page.get_by_placeholder('Search').fill('search')
+#     page.locator('.input-group-btn1').click()
+#     print(page.url)
+#     # page.pause()
 
 
 def handle_page(page):
