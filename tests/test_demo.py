@@ -18,10 +18,3 @@ def test_page(page: Page):
 #     page.locator('.input-group-btn1').click()
 #     print(page.url)
 #     # page.pause()
-
-
-def handle_page(page):
-    page.wait_for_load_state()
-    print(page.title())
-#
-# context.on("page", handle_page)
