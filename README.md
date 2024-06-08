@@ -1,9 +1,11 @@
 # playwright
 playwright sandbox
 
-`python -m venv .venv --system-site-packages`
+`pip install pytest-playwright`
 
-`source .venv/Scripts/activate`
+`python -m venv venv`
+
+`source venv/Scripts/activate`
 
 `playwright install`
 
