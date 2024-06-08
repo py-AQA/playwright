@@ -6,8 +6,9 @@ def browser_context_args():
     return {
         "record_video_dir": "videos/",
         "record_video_size": {"width": 640, "height": 480},
-        "viewport": {
-            "width": 1920,
-            "height": 1080,
-        }
+        "viewport": {"width": 800, "height": 600}
+        # "viewport": {
+        #     "width": 1920,
+        #     "height": 1080,
+        # }
     }
