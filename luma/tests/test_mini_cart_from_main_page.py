@@ -1,28 +1,39 @@
-import pytest
 from playwright.async_api import Page
-from playwright.sync_api import Playwright, sync_playwright, expect
-# from pages.mini_cart import *
-main_page_link = "https://magento.softwaretestingboard.com"
+from playwright.sync_api import expect
 
-@pytest.fixture
-def browser_fixture():
-    with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=False)
-        context = browser.new_context()
-        page = context.new_page()
-        yield page
-        page.close()
-        browser.close()
+from luma.pages import mini_cart
+from luma.pages.locators import ProductLocators as PL, ShoppingCart as SC
 
 
-def test_go_to_mini_cart(page: Page):
-    page.goto(main_page_link)
+def test_redirection_magento_store_notes(page: Page):
+    page.goto("https://magento.softwaretestingboard.com")
     # page.pause()
-    page.locator("li").filter(has_text="Argus All-Weather Tank As low").get_by_label("M").click()
-    page.locator("li").filter(has_text="Argus All-Weather Tank As low").get_by_label("Gray").click()
-    page.locator("li").filter(has_text="Argus All-Weather Tank As low").get_by_role("button").click()
+    page.get_by_role("link", name="Notes").click()
+    with page.context.expect_page() as tab:
+        new_tab = tab.value
+    assert new_tab.url == ("https://softwaretestingboard.com/magento-store-notes/?utm_source=magento_store&utm_medium"
+                           "=banner&utm_campaign=notes_promo&utm_id=notes_promotion")
+
+    header = new_tab.locator('[class="alignwide wp-block-post-title"]')
+    assert header.is_visible()
+    expect(header).to_have_text("Magento 2 Store(Sandbox site) – Notes")
 
 
+def test_add_item(page: Page):
+    page.goto(mini_cart.main_page_link)
+    # page.pause()
+    mini_cart.add_item(page, name_item="Argus All-Weather Tank", size="M", color="Gray", qty_items="1")
+    # qty_counter = page.locator('//*[@class="counter-number"][text()="1"]')
+    # expect(qty_counter).to_have_text("1")
+
+
+
+
+# def test_go_to_mini_cart(page: Page):
+#     page.goto(mini_cart.main_page_link)
+#     # page.pause()
+#     mini_cart.add_item(page, name_item="Argus All-Weather Tank", size="M", color="Gray")
+    # page.get_by_role("link", name=" My Cart 1 1 items").click()
 
 # def test_color_and_clickability_of_view_and_edit_cart_link_in_the_mini_cart():
 #     go_to_mini_cart()
