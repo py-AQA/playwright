@@ -1,5 +1,4 @@
-# import re
-from playwright.async_api import Page, expect
+from playwright.sync_api import Page, expect
 
 base_url = 'https://letcode.in/radio'
 
@@ -10,6 +9,6 @@ def test_radiobutton(page: Page):
     page.locator("#one").check()
     page.locator("#two").check()
     # page.get_by_label("Remember me").uncheck()
-    radio_loct = page.get_by_text("#two")
-    page.pause()
+    radio_loct = page.locator("#two")
+    # page.pause()
     expect(radio_loct).to_be_checked()
