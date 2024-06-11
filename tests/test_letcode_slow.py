@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+from selenium.webdriver import Keys
 
 base_url = 'https://letcode.in/radio'
 
@@ -21,6 +22,11 @@ def test_edit_button(page: Page):
     second_input = page.locator("#join")
     expect(second_input).to_be_visible()
     expect(second_input).not_to_be_empty()
-    text = second_input.inner_html()
+    second_input.press("End")
+    second_input.type(" new")
+    second_input.press("Tab")
+
+    text = second_input.input_value()
     print(text)
-    page.pause()
+    print("hi")
+    # page.pause()
