@@ -1,4 +1,6 @@
-from playwright.async_api import Page
+import time
+
+from playwright.sync_api import Page
 from playwright.sync_api import expect
 
 from luma.pages import mini_cart
@@ -22,8 +24,15 @@ def test_redirection_magento_store_notes(page: Page):
 def test_add_item(page: Page):
     page.goto(mini_cart.main_page_link)
     # page.pause()
-    mini_cart.add_item(page, name_item="Argus All-Weather Tank", size="M", color="Gray", qty_items="1")
-    # qty_counter = page.locator('//*[@class="counter-number"][text()="1"]')
+    mini_cart.add_item(page, name_item="Hero Hoodie", size="S", color="Gray")
+    mini_cart.add_qty(page, qty_items="1")
+    # qty_counter = page.locator('//*[@class="counter-number"]')
+    # time.sleep(4)
+    # print(qty_counter.inner_html(), type(qty_counter))
+    # print(qty_counter.text_content(), type(qty_counter))
+    # print(qty_counter.all_inner_texts(), type(qty_counter))
+    # print(qty_counter.inner_text(), type(qty_counter))
+    # print(qty_counter, type(qty_counter))
     # expect(qty_counter).to_have_text("1")
 
 
