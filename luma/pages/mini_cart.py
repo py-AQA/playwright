@@ -1,25 +1,24 @@
 import time
 
-from playwright.async_api import Page, expect
+from playwright.sync_api import Page, expect
 
 main_page_link = "https://magento.softwaretestingboard.com"
 
 
-def add_item(page: Page, name_item, size, color, qty_items):
-    page.locator("li").filter(has_text=name_item).get_by_label(size).click()
-    page.locator("li").filter(has_text=name_item).get_by_label(color).click()
-    page.locator("li").filter(has_text=name_item).get_by_role("button").click()
-    # page.locator(f'//*[@class="counter-number"][text()="{qty_items}"]')
-    # qty_counter = page.get_by_text(f'//*[@class="counter-number"][text()="{qty_items}"]')
-    # expect(qty_counter).to_have_text(qty_items)
-    qty_counter = page.wait_for_selector('.counter-number')
+def add_item(page: Page, name_item, size, color):
+    page.locator("ol div").filter(has_text="name_item")
+    # print(page.locator("ol div").filter(has_text=name_item).get_by_label(size).last.get_attribute("outerHTML"))
+
+    page.locator("ol div").filter(has_text=name_item).get_by_label(size).last.click()
+    page.locator("ol div").filter(has_text=name_item).get_by_label(color).click()
     # page.pause()
-    print("Loaded image: " + str(qty_counter.get_attribute('innerText')))
+    page.locator("ol div").filter(has_text=name_item).get_by_role("button").click()
 
-    expect(qty_counter).is_visible()
+
+def add_qty(page: Page, qty_items):
+    qty_counter = page.locator('//*[@class="counter-number"]')
+    # print(qty_items, type(qty_items))
     expect(qty_counter).to_have_text(qty_items)
-
-
 
 
 
