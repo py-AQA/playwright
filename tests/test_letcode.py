@@ -1,7 +1,7 @@
 from playwright.sync_api import Playwright, sync_playwright
 
 
-def run(playwright: Playwright) -> None:
+def test_run(playwright: Playwright) -> None:
     browser = playwright.chromium.launch(headless=False)
     context = browser.new_context(viewport={"width": 800, "height": 600})
     page = context.new_page()
@@ -18,4 +18,4 @@ def run(playwright: Playwright) -> None:
 
 
 with sync_playwright() as playwright_context_manager:
-    run(playwright_context_manager)
+    test_run(playwright_context_manager)

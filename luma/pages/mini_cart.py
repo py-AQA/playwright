@@ -1,8 +1,11 @@
 import time
 
+
 from playwright.sync_api import Page, expect
 
+
 main_page_link = "https://magento.softwaretestingboard.com"
+
 
 
 def add_item(page: Page, name_item, size, color):
