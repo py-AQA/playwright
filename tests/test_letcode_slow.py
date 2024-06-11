@@ -1,5 +1,7 @@
+import time
+
 from playwright.sync_api import Page, expect
-from selenium.webdriver import Keys
+
 
 base_url = 'https://letcode.in/radio'
 
@@ -25,8 +27,29 @@ def test_edit_button(page: Page):
     second_input.press("End")
     second_input.type(" new")
     second_input.press("Tab")
+    expect(page.locator("#getMe")).to_have_value("ortonikc")
+    page.locator("#clearMe").clear()
+    expect(page.locator("#clearMe")).to_be_empty()
+    expect(page.locator("#noEdit")).to_be_disabled()
+    expect(page.locator("#dontwrite")).not_to_be_editable()
 
-    text = second_input.input_value()
-    print(text)
-    print("hi")
-    # page.pause()
+
+def test_drag_drop(page: Page):
+    page.goto('https://letcode.in/draggable')
+    page.locator("#sample-box").hover()
+    page.mouse.down()
+    page.mouse.move(300, 300, steps=10)
+    page.mouse.up()
+    time.sleep(5)
+
+
+def test_drag_to_target(page: Page):
+    page.goto('https://letcode.in/dropable')
+    page.drag_and_drop("#draggable", "#droppable")
+
+
+
+
+
+
+
