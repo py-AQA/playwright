@@ -18,3 +18,5 @@ def test_page(page: Page):
 #     page.locator('.input-group-btn1').click()
 #     print(page.url)
 #     # page.pause()
+
+
