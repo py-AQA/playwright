@@ -1,4 +1,5 @@
 import pytest
+from playwright.sync_api import Dialog
 
 
 @pytest.fixture(scope="session")
