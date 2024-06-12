@@ -1,21 +1,23 @@
-import time
-
+import pytest
 from playwright.sync_api import Page, expect
-
 
 base_url = 'https://letcode.in/radio'
 
 
+@pytest.mark.ok
 def test_radiobutton(page: Page):
     page.goto(base_url)
-    # page.wait_for_timeout(3000)
+
     page.locator("#one").check()
+    expect(page.locator("#one")).to_be_checked()
+    expect(page.locator("#two")).not_to_be_checked()
+
     page.locator("#two").check()
-    # page.get_by_label("Remember me").uncheck()
-    radio_loct = page.locator("#two")
-    expect(radio_loct).to_be_checked()
+    expect(page.locator("#one")).not_to_be_checked()
+    expect(page.locator("#two")).to_be_checked()
 
 
+@pytest.mark.ok
 def test_edit_button(page: Page):
     page.goto('https://letcode.in/edit')
     input = page.locator("//input[@id='fullName']")
@@ -40,16 +42,9 @@ def test_drag_drop(page: Page):
     page.mouse.down()
     page.mouse.move(300, 300, steps=10)
     page.mouse.up()
-    time.sleep(5)
 
 
+@pytest.mark.ok
 def test_drag_to_target(page: Page):
     page.goto('https://letcode.in/dropable')
     page.drag_and_drop("#draggable", "#droppable")
-
-
-
-
-
-
-
