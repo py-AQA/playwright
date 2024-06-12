@@ -1,7 +1,7 @@
 from playwright.sync_api import Page, expect
 
 
-def test_checkbox(page: Page):
+def test_letcode_playwright(page: Page):
     page.goto('https://letcode.in/edit')
     page.locator('//input[@id="fullName"]').fill("LastName")
     expect(page.locator('#fullName')).not_to_be_empty()
@@ -16,4 +16,3 @@ def test_checkbox(page: Page):
     expect(page.locator("#clearMe")).to_be_empty()
     expect(page.locator('#noEdit')).to_be_disabled()
     expect(page.locator('#dontwrite')).not_to_be_editable()
-
