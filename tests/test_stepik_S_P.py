@@ -21,6 +21,7 @@ def test_summ(page: Page):
 
 
 
+
 def test_abs(page: Page):
     page.goto("https://suninjuly.github.io/execute_script.html")
     page.on("dialog", handle_manage_alert)
