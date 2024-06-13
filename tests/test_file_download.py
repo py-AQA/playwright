@@ -10,7 +10,7 @@ def test_demo_qa_file_download(page: Page):
         page.get_by_role("button", name="Direct Link Download", exact=True).click()
 
     download = download_info.value
-    print("download.path()", download.path(),)
+    print("download.path()", download.path(), )
     print("download.suggested_filename", download.suggested_filename)
     print("download.page.url", download.page.url)
     print("download.url", download.url)
@@ -24,14 +24,14 @@ def test_demo_qa_file_server_download(page: Page):
         page.get_by_role("button", name="Server Download").click()
 
     download = download_info.value
-    print("download.path()", download.path(),)
+    print("download.path()", download.path(), )
     print("download.suggested_filename", download.suggested_filename)
     print("download.page.url", download.page.url)
     print("download.url", download.url)
 
 
 def handle_download(download: Download):
-    print("download.path()", download.path(),)
+    print("download.path()", download.path(), )
     print("download.suggested_filename", download.suggested_filename)
     print("download.page.url", download.page.url)
     print("download.url", download.url)
