@@ -32,7 +32,7 @@ def run_test_radio_buttons(playwright: Playwright) -> None:
     browser.close()
 
 
-def run_hanle_check(playwright: Playwright) -> None:
+def run_handle_check(playwright: Playwright) -> None:
     done = "What needs to be done?"
     browser = playwright.firefox.launch(headless=False)
     context = browser.new_context(
@@ -56,4 +56,4 @@ def run_hanle_check(playwright: Playwright) -> None:
 
 with sync_playwright() as playwright_context_manager:
     run_test_radio_buttons(playwright_context_manager)
-    run_hanle_check(playwright_context_manager)
+    run_handle_check(playwright_context_manager)
