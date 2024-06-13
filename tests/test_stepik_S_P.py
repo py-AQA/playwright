@@ -1,7 +1,9 @@
 import math
 import time
 
+import pytest
 from playwright.sync_api import Page, expect, Dialog, FileChooser, Download
+
 
 def calc(x: str) -> str:
     return str(math.log(abs(12 * math.sin(int(x)))))
@@ -160,59 +162,4 @@ def test_file_upload_with(page: Page):
 
     page.get_by_role("button", name="Upload").click()
     expect(page.locator("#uploadedfilename")).to_contain_text("text_file.txt")
-
-
-
-
-
-def test_demo_qa_file_download(page: Page):
-    page.goto("https://testpages.eviltester.com/styled/download/download.html")
-    with page.expect_download() as download_info:
-        page.get_by_role("button", name="Direct Link Download", exact=True).click()
-    val = download_info.value
-    print(val.suggested_filename)
-    print(val.page.url)
-    print(val.path())
-    print(val.url)
-    val.save_as("renamed_file.txt")
-
-
-def test_demo_qa_file_server_download(page: Page):
-    page.goto("https://testpages.eviltester.com/styled/download/download.html")
-    with page.expect_download() as download_info:
-        page.get_by_role("button", name="Server Download").click()
-    val = download_info.value
-    print(val.suggested_filename)
-    print(val.page.url)
-    print(val.path())
-    print(val.url)
-
-
-def handle_download(val: Download):
-    print(val.suggested_filename)
-    print(val.page.url)
-    print(val.path())
-    print(val.url)
-    val.save_as("renamed_file.txt")
-
-
-
-def test_demo_qa_file_download_4(page: Page):
-    page.goto("https://testpages.eviltester.com/styled/download/download.html")
-    page.on("download", handle_download)
-    page.get_by_role("button", name="Direct Link Download", exact=True).click()
-
-
-def test_redirect_server(page: Page):
-    page.goto("https://testpages.eviltester.com/styled/download/download.html")
-    page.get_by_role("button", name="POST / GET Redirect Server").click()
-    expect(page.get_by_text("This is a generated text file")).to_be_visible()
-
-
-
-
-def test_direct_link(page: Page):
-    page.goto("https://testpages.eviltester.com/styled/download/download.html")
-    page.get_by_role("button", name="Direct Link", exact=True).click()
-    expect(page.get_by_text("This is a text file")).to_be_visible()
 
