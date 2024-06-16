@@ -45,3 +45,4 @@ def test_shadow_root2(page:Page):
     page.locator('//*[@id="content"]/my-paragraph[2]/ul/li[2]').click()
     expect(page.get_by_text("In a list!")).to_be_visible()
 
+# aaa
