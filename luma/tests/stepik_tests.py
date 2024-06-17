@@ -36,6 +36,8 @@ def test_find_the_sum(page: Page):
     button.click()
 
 
+"=================================================================================================================="
+
 # stepik/part2/lesson/2/step/6
 """         steps:
 1)Открыть страницу https://SunInJuly.github.io/execute_script.html.
@@ -49,8 +51,98 @@ def test_find_the_sum(page: Page):
 
 
 def test_execute_script(page: Page):
-    page.goto("https://SunInJuly.github.io/execute_script.html.")
+    page.goto("https://suninjuly.github.io/execute_script.html")
     page.on("dialog", handle_stepik_alert)
     x = page.locator('#input_value').inner_text()
     calc(x)
+    page.locator("#answer").fill(calc(x))
+    # page.locator("form div").filter(has_text="I'm the robot").click()
+    page.get_by_label("I'm the robot").check()
+    page.get_by_label("Robots rule").check()
+    page.locator('[class="btn btn-primary"]').click()
+    # page.pause()
 
+
+"====================================================================================================================="
+
+# stepik/part2/lesson/2/step/8
+"""         steps:
+1)Открыть страницу http://suninjuly.github.io/file_input.html
+2)Заполнить текстовые поля: имя, фамилия, email
+3)Загрузить файл. Файл должен иметь расширение .txt и может быть пустым
+4)Нажать кнопку "Submit"."""
+
+
+def test_upload_file(page: Page):
+    page.goto("https://suninjuly.github.io/file_input.html")
+    page.on("dialog", handle_stepik_alert)
+    page.get_by_placeholder("Enter first name").fill("Avenging")
+
+    page.get_by_placeholder("Enter last name").fill("Angelo")
+    page.get_by_placeholder("Enter email").fill("Avenging_Angelo.pru")
+    page.set_input_files("[for='file']", "for test.txt")
+    page.locator('[class="btn btn-primary"]').click()
+
+
+"==================================================================================================================="
+# stepik/part2/lesson/3/step/4
+"""        Задание: принимаем alert
+                 steps:
+1)Открыть страницу http://suninjuly.github.io/alert_accept.html
+2)Нажать на кнопку
+3)Принять confirm
+4)На новой странице решить капчу для роботов, чтобы получить число с ответом."""
+
+
+def test_alert(page: Page):
+    page.goto("http://suninjuly.github.io/alert_accept.html")
+
+    page.on("dialog", lambda dialog: dialog.accept())
+    # page.pause()
+    page.locator('[type="submit"]').click()
+    page.on("dialog", handle_stepik_alert)
+    x = page.locator('#input_value').inner_text()
+    calc(x)
+    page.locator("#answer").fill(calc(x))
+    page.locator('[class="btn btn-primary"]').click()
+
+
+"==================================================================================================================="
+
+# stepik/part2/lesson/3/step/6
+"""        steps:
+1)Открыть страницу http://suninjuly.github.io/redirect_accept.html
+2)Нажать на кнопку
+3)Переключиться на новую вкладку
+4)Пройти капчу для робота и получить число-ответ"""
+
+"""click(force=True) ДЕЛАЕТ ВОЗМОЖНЫМ кликнуть на Динамическую кнопку"""
+
+
+def test_redirection(page: Page):
+    page.goto("http://suninjuly.github.io/redirect_accept.html")
+    # page.pause()
+    with page.context.expect_page() as tab:
+        page.get_by_text("I want to go on a magical journey!").click(force=True)
+
+    new_tab = tab.value
+    new_tab.on("dialog", handle_stepik_alert)
+    x = new_tab.locator('#input_value').inner_text()
+    calc(x)
+    new_tab.locator("#answer").fill(calc(x))
+    new_tab.locator('[class="btn btn-primary"]').click()
+
+
+# stepik/part2/lesson/4/step/8
+"""        steps:
+1)Открыть страницу http://suninjuly.github.io/explicit_wait2.html
+2)Дождаться, когда цена дома уменьшится до $100 (ожидание нужно установить не меньше 12 секунд)
+3)Нажать на кнопку "Book"
+4)Решить уже известную нам математическую задачу (используйте ранее написанный код) и отправить решение"""
+
+"""click(force=True) ДЕЛАЕТ ВОЗМОЖНЫМ кликнуть на Динамическую кнопку"""
+
+
+def test_expeted(page: Page):
+    page.goto("http://suninjuly.github.io/redirect_accept.html")
+    # page.pause()
