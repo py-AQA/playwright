@@ -2,6 +2,7 @@ import pytest
 from playwright.sync_api import Page
 
 
+@pytest.mark.ok
 def test_drag_drop(page: Page):
     page.goto('https://letcode.in/draggable')
     box_draggable = page.locator("#sample-box").bounding_box()
