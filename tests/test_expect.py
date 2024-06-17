@@ -3,7 +3,6 @@ from playwright.sync_api import Page, expect
 from utils.stepik import handle_stepik_alert, calc
 
 
-
 def test_section2_lesson4_step8_expect(page: Page):
     page.goto('http://suninjuly.github.io/explicit_wait2.html')
 
