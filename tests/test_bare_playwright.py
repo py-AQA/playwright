@@ -14,7 +14,8 @@ def handle_response(resp: Response):
     print(">>> response: ", resp.status, resp.status_text, resp.headers)
 
 
-def run_test_radio_buttons(playwright: Playwright) -> None:
+def run_radio_buttons(playwright: Playwright) -> None:
+    print("\n---BEGIN run_radio_buttons---\n")
     browser = playwright.chromium.launch(headless=False)
 
     context = browser.new_context(viewport={"width": 800, "height": 600})
@@ -30,9 +31,11 @@ def run_test_radio_buttons(playwright: Playwright) -> None:
     # ---------------------
     context.close()
     browser.close()
+    print("\n---END run_radio_buttons---\n")
 
 
 def run_handle_check(playwright: Playwright) -> None:
+    print("\n---BEGIN run_handle_check---\n")
     done = "What needs to be done?"
     browser = playwright.firefox.launch(headless=False)
     context = browser.new_context(
@@ -52,8 +55,14 @@ def run_handle_check(playwright: Playwright) -> None:
 
     context.close()
     browser.close()
+    print("\n---END run_handle_check---\n")
 
 
 with sync_playwright() as playwright_context_manager:
-    run_test_radio_buttons(playwright_context_manager)
+    run_radio_buttons(playwright_context_manager)
     run_handle_check(playwright_context_manager)
+
+
+def test_empty():
+    """пустой тест для того чтоб при запуске из pycharm pytest не ругался"""
+    pass

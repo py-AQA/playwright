@@ -40,3 +40,4 @@ def test_section2_lesson2_step3_select_by_value_on_page_selects2(page: Page):
     page.select_option("#dropdown", value=str(result))
 
     page.get_by_role("button", name="Submit").click()
+

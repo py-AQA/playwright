@@ -2,7 +2,6 @@ import pytest
 from playwright.sync_api import Page, expect
 
 
-
 @pytest.mark.ok
 def test_radiobutton(page: Page):
     page.goto('https://letcode.in/radio')
