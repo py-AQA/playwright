@@ -1,6 +1,6 @@
 import pytest
+from playwright.sync_api import Page
 from playwright.sync_api import expect
-from playwright.sync_api import Page, Dialog
 
 from utils.stepik import handle_stepik_alert, calc
 
