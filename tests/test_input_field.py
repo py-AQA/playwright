@@ -2,13 +2,6 @@ import pytest
 from playwright.sync_api import Page, expect
 
 
-def test_page(page: Page):
-    page.goto('https://naveenautomationlabs.com/opencart/')
-    page.get_by_placeholder('Search').fill('search')
-    page.locator('.input-group-btn').click()
-    print(page.url)
-
-
 @pytest.mark.ok
 def test_input_field_key_press_and_type(page: Page):
     page.goto('https://letcode.in/edit')
@@ -33,4 +26,3 @@ def test_input_field_key_press_and_type(page: Page):
     expect(page.locator("#noEdit")).to_be_disabled()
 
     expect(page.locator("#dontwrite")).not_to_be_editable()
-
