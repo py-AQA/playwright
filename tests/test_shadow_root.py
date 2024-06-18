@@ -1,5 +1,5 @@
 import pytest
-from playwright.sync_api import Page, Download, expect, Position
+from playwright.sync_api import Page, expect
 
 
 @pytest.mark.ok
