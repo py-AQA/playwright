@@ -96,6 +96,25 @@ def handle_archive(route, response):
     route.fulfill(status=200, json={"archive": "archive"})
 
 
+def handle_statistic(route, response):
+    route.fulfill(status=200, json=[{"period": "", "label": "", "day": ""}])
+
+
+def handle_reminder(route, response):
+    route.fulfill(status=200, json={"reminders": [
+        {"status": "status", "comment": "string", "date": "string", "startAt": "string", "endAt": "string",
+         "minutesLate": 12},
+        {"loop": True, "reminderDate": "", "reminderTime": "11:11"}]})
+
+
+def handle_store(route, response):
+    route.fulfill(status=200)
+
+
+def handle_timesheet_search(route, response):
+    route.fulfill(status=200)
+
+
 def handle_absence(route, response):
     route.fulfill(status=200, json={"absence": "absence"})
 
@@ -114,8 +133,10 @@ def handle_absence_medical_closest(route, response):
 
 def handle_timesheet(route, response):
     route.fulfill(status=200, json={"timesheet": [
-        {"id": "", "date": "date", "status": "Прогул", "endAt": "04:58", "comment": "comment", "startAt": "03:57"},
-        {"id": "", "date": "date", "status": "status"}]})
+        {"id": "one", "date": "2024-01-01", "status": "Прогул", "endAt": "04:58", "comment": "comment1",
+         "startAt": "03:57"},
+        {"id": "two", "date": "2024-01-02", "status": "Отгул", "endAt": "04:58", "comment": "comment2",
+         "startAt": "03:57"}]})
 
 
 def handle_vacation_closest(route, response):
@@ -150,9 +171,13 @@ def page_my() -> Page:
         context.route("**/api/admin-panel/employees/urltg", handle_urltg)
         context.route("**/api/admin-panel/employees/*/schedule/working-days", handle_schedule)
         context.route("**/api/admin-panel/employees/*/archive", handle_archive)
+        context.route("**/api/admin-panel/employees/*/statistic?*", handle_statistic)
+        context.route("**/api/admin-panel/employees/*/reminder", handle_reminder)
+        context.route("**/api/admin-panel/employees/*/timesheet/*/store", handle_store)
+        context.route("**/api/admin-panel/employees/*/timesheet?search=*", handle_timesheet_search)
 
         context.route("**/api/admin-panel/employees/*/absence", handle_absence)
-        context.route("**/api/admin-panel/employees/one/absence/common", handle_absence_common)
+        context.route("**/api/admin-panel/employees/*/absence/common", handle_absence_common)
         context.route("**/api/admin-panel/employees/*/absence/common/closest", handle_absence_common_closest)
         context.route("**/api/admin-panel/employees/*/absence/medical/closest", handle_absence_medical_closest)
 
