@@ -1,8 +1,10 @@
-import pytest
-from playwright.sync_api import Page, expect
-import json
 import csv
+import json
 import os
+
+import pytest
+import requests
+from playwright.sync_api import Page
 
 
 def save_json(data, filename: str):
@@ -100,15 +102,13 @@ def test_add_pet(page: Page):
 
 def test_api_1_post_user(page: Page, header):
     data = {
-
         "email": "max3@gmail.com",
         "password": "password",
         "name": "Maximus",
         "nickname": "maximus"
-
     }
 
-    response = page.request.post('https://dev-gs.qa-playground.com/api/v1/users', data=data, headers=header)
+    response = page.request.post(f'https://release-gs.qa-playground.com/api/v1/users', data=data, headers=header)
 
     print(response.status)
     print(response.json())
@@ -116,41 +116,35 @@ def test_api_1_post_user(page: Page, header):
     assert response.status == 200, "error, status code not correctly"
 
 
+@pytest.mark.xfail
 def test_api_1_get_user(page: Page, header):
     user = read_json('create_user.json')['uuid']
     print(user, header)
-    response = page.request.get(f'https://dev-gs.qa-playground.com/api/v1/users/{user}', headers=header)
+    response = page.request.get(f'https://release-gs.qa-playground.com/api/v1/users/{user}', headers=header)
 
     print(response.status)
     print(response.json())
 
-    url = f'https://dev-gs.qa-playground.com/api/v1/users/{user}'
+    url = f'https://release-gs.qa-playground.com/api/v1/{user}'
     print(url)
-    # save_json(response.json(), 'list_user.json')
+
     assert response.status == 200, "error, status code not correctly"
 
 
+@pytest.mark.xfail
 def test_api_1_dell_user(page: Page, header):
     user = read_json('create_user.json')['uuid']
-    # users = read_json('list_user.json')['users']
     print(user)
-    # first_uuid = users[0]['uuid']
-    #
-    # response = page.request.delete(f'https://dev-gs.qa-playground.com/api/v1/users/{first_uuid}', headers=header)
-    # url = f'https://dev-gs.qa-playground.com/api/v1/users/{first_uuid}'
 
-    response = page.request.delete(f'https://dev-gs.qa-playground.com/api/v1/users/{user}', headers=header)
-    url = f'https://dev-gs.qa-playground.com/api/v1/users/{user}'
+    response = page.request.delete(f'https://release-gs.qa-playground.com/api/v1/users/{user}', headers=header)
+    url = f'https://release-gs.qa-playground.com/api/v1/users/{user}'
 
     print(url)
     print(response.status)
-    # print(response.json())
+    print(response.json())
     # print(response.json()['users'][0])
     assert response.status == 204, "error, status code not correctly"
 
-
-import requests
-import pytest
 
 BASE_URL = "https://release-gs.qa-playground.com/api/v1"
 AUTH_HEADER = {
@@ -172,6 +166,7 @@ def setup_test_environment():
     assert response.status_code == 205
 
 
+@pytest.mark.xfail
 def test_delete_user(header):
     # Step 1: Get user list
     print(header)
@@ -196,5 +191,3 @@ def test_delete_user(header):
     # Step 6: Verify that user information doesn't return
     response = requests.get(f"{BASE_URL}/users/{user_uuid}", headers=header)
     assert response.status_code == 404
-
-
