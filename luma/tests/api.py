@@ -1,5 +1,5 @@
 import pytest
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 import json
 import csv
 import os
@@ -104,35 +104,45 @@ def test_api_1_post_user(page: Page, header):
         "email": "max3@gmail.com",
         "password": "password",
         "name": "Maximus",
-        "nickname": "maximus"
+        "nickname": "maximus",
+        "uuid": "00000000 - 0000 - 45662 - b3fc - 2c963f66afa6"
     }
-
-
 
     response = page.request.post('https://dev-gs.qa-playground.com/api/v1/users', data=data, headers=header)
 
     print(response.status)
     # print(response.json())
     save_json(response.json(), 'create_user.json')
+    assert response.status == 200, "error, status code not correctly"
 
 
 def test_api_1_get_user(page: Page, header):
-
     user = read_json('create_user.json')['uuid']
     response = page.request.get(f'https://dev-gs.qa-playground.com/api/v1/users/{user}', headers=header)
 
     print(response.status)
     print(response.json())
-    # print(response.json()['users'][0])
+
+    url = f'https://dev-gs.qa-playground.com/api/v1/users/{user}'
+    print(url)
+    # save_json(response.json(), 'list_user.json')
+    assert response.status == 200, "error, status code not correctly"
 
 
 def test_api_1_dell_user(page: Page, header):
-
     user = read_json('create_user.json')['uuid']
+    # users = read_json('list_user.json')['users']
+    # print(users)
+    # first_uuid = users[0]['uuid']
+    #
+    # response = page.request.delete(f'https://dev-gs.qa-playground.com/api/v1/users/{first_uuid}', headers=header)
+    # url = f'https://dev-gs.qa-playground.com/api/v1/users/{first_uuid}'
 
     response = page.request.delete(f'https://dev-gs.qa-playground.com/api/v1/users/{user}', headers=header)
     url = f'https://dev-gs.qa-playground.com/api/v1/users/{user}'
+
     print(url)
     print(response.status)
-    print(response.json())
+    # print(response.json())
     # print(response.json()['users'][0])
+    assert response.status == 204, "error, status code not correctly"
