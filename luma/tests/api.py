@@ -3,7 +3,6 @@ import json
 import os
 
 import pytest
-import requests
 from playwright.sync_api import Page
 
 
@@ -27,16 +26,6 @@ def save_csv(data, filename: str):
         for uuid in data:
             writer.writerow([uuid])
     csvfile.close()
-
-
-@pytest.fixture()
-def header():
-    return {
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IldGZlRBQ0hzYUhvQ3VML1MiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzE5Mzc4Mjc3LCJpYXQiOjE3MTg3NzgyNzcsImlzcyI6Imh0dHBzOi8vbXlrb3RxYm9ja3p2emFjY2N1Ynouc3VwYWJhc2UuY28vYXV0aC92MSIsInN1YiI6IjI4NDIzYTljLThhNWMtNDRlYy04YTBkLThkNTUyZTY3ODUzZCIsImVtYWlsIjoidHJhbGwxODExMTk4NUBnbWFpbC5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImdpdGh1YiIsInByb3ZpZGVycyI6WyJnaXRodWIiXX0sInVzZXJfbWV0YWRhdGEiOnsiYXZhdGFyX3VybCI6Imh0dHBzOi8vYXZhdGFycy5naXRodWJ1c2VyY29udGVudC5jb20vdS8xNjEwMDI1OTk_dj00IiwiZW1haWwiOiJ0cmFsbDE4MTExOTg1QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmdWxsX25hbWUiOiJLb25zdGFudGluIiwiaXNzIjoiaHR0cHM6Ly9hcGkuZ2l0aHViLmNvbSIsIm5hbWUiOiJLb25zdGFudGluIiwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJHcm9tLVphZGlyYTg1IiwicHJvdmlkZXJfaWQiOiIxNjEwMDI1OTkiLCJzdWIiOiIxNjEwMDI1OTkiLCJ1c2VyX25hbWUiOiJHcm9tLVphZGlyYTg1In0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoib2F1dGgiLCJ0aW1lc3RhbXAiOjE3MTg3NzgyNzd9XSwic2Vzc2lvbl9pZCI6ImQ3NmE3NGI2LWJlZjctNGEzYy05ZDU4LWFlOWY5MWE5YzU4ZSIsImlzX2Fub255bW91cyI6ZmFsc2V9.V3VhSModWq0vgB0KTDFHT6e9DLu-L06cLjJ2jaB9s2s",
-        "X-Task-Id": "API-1",
-        'accept': 'application/json',
-        'content-Type': 'application/json'
-    }
 
 
 def test_inventory(page):
@@ -100,94 +89,53 @@ def test_add_pet(page: Page):
     print(response.json())
 
 
+@pytest.fixture()
+def header():
+    return {
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IldGZlRBQ0hzYUhvQ3VML1MiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzE5NTA4OTYwLCJpYXQiOjE3MTg5MDg5NjAsImlzcyI6Imh0dHBzOi8vbXlrb3RxYm9ja3p2emFjY2N1Ynouc3VwYWJhc2UuY28vYXV0aC92MSIsInN1YiI6IjI4NDIzYTljLThhNWMtNDRlYy04YTBkLThkNTUyZTY3ODUzZCIsImVtYWlsIjoidHJhbGwxODExMTk4NUBnbWFpbC5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImdpdGh1YiIsInByb3ZpZGVycyI6WyJnaXRodWIiXX0sInVzZXJfbWV0YWRhdGEiOnsiYXZhdGFyX3VybCI6Imh0dHBzOi8vYXZhdGFycy5naXRodWJ1c2VyY29udGVudC5jb20vdS8xNjEwMDI1OTk_dj00IiwiZW1haWwiOiJ0cmFsbDE4MTExOTg1QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmdWxsX25hbWUiOiJLb25zdGFudGluIiwiaXNzIjoiaHR0cHM6Ly9hcGkuZ2l0aHViLmNvbSIsIm5hbWUiOiJLb25zdGFudGluIiwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJHcm9tLVphZGlyYTg1IiwicHJvdmlkZXJfaWQiOiIxNjEwMDI1OTkiLCJzdWIiOiIxNjEwMDI1OTkiLCJ1c2VyX25hbWUiOiJHcm9tLVphZGlyYTg1In0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoib2F1dGgiLCJ0aW1lc3RhbXAiOjE3MTg5MDg5NjB9XSwic2Vzc2lvbl9pZCI6IjYwN2RhOTM1LTI2MWYtNDEyMC04YzVkLWU5NGU0YTg0N2E2YSIsImlzX2Fub255bW91cyI6ZmFsc2V9.p9h329fm9TrdMbfXr8TwOypzp52VBWVBFUKdq0oJyDY",
+        "X-Task-Id": "API-1",
+        'accept': 'application/json',
+        'content-Type': 'application/json'
+    }
+
+
 def test_api_1_post_user(page: Page, header):
     data = {
-        "email": "max3@gmail.com",
+        "email": "max@gmail.com",
         "password": "password",
-        "name": "Maximus",
-        "nickname": "maximus"
+        "name": "Max",
+        "nickname": "max"
     }
 
     response = page.request.post(f'https://release-gs.qa-playground.com/api/v1/users', data=data, headers=header)
-
     print(response.status)
     print(response.json())
     save_json(response.json(), 'create_user.json')
     assert response.status == 200, "error, status code not correctly"
 
 
-@pytest.mark.xfail
-def test_api_1_get_user(page: Page, header):
-    user = read_json('create_user.json')['uuid']
-    print(user, header)
-    response = page.request.get(f'https://release-gs.qa-playground.com/api/v1/users/{user}', headers=header)
+def test_api_1_get_user_list(page: Page, header):
+    # user = read_json('create_user.json')['uuid']
+    # print(user, header)
+    response = page.request.get(f'https://release-gs.qa-playground.com/api/v1/users', headers=header)
 
     print(response.status)
     print(response.json())
 
-    url = f'https://release-gs.qa-playground.com/api/v1/{user}'
-    print(url)
-
+    save_json(response.json(), 'create_user.json')
     assert response.status == 200, "error, status code not correctly"
 
 
-@pytest.mark.xfail
 def test_api_1_dell_user(page: Page, header):
-    user = read_json('create_user.json')['uuid']
-    print(user)
+    users = read_json('create_user.json')['users']
+    first_uuid = users[0]['uuid']
+    print(first_uuid)
 
-    response = page.request.delete(f'https://release-gs.qa-playground.com/api/v1/users/{user}', headers=header)
-    url = f'https://release-gs.qa-playground.com/api/v1/users/{user}'
-
+    response = page.request.delete(f'https://release-gs.qa-playground.com/api/v1/users/{first_uuid}', headers=header)
+    url = f'https://release-gs.qa-playground.com/api/v1/users/{first_uuid}'
     print(url)
+
     print(response.status)
-    print(response.json())
+    # print(response.json())
     # print(response.json()['users'][0])
     assert response.status == 204, "error, status code not correctly"
-
-
-BASE_URL = "https://release-gs.qa-playground.com/api/v1"
-AUTH_HEADER = {
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IldGZlRBQ0hzYUhvQ3VML1MiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzE5Mzc4Mjc3LCJpYXQiOjE3MTg3NzgyNzcsImlzcyI6Imh0dHBzOi8vbXlrb3RxYm9ja3p2emFjY2N1Ynouc3VwYWJhc2UuY28vYXV0aC92MSIsInN1YiI6IjI4NDIzYTljLThhNWMtNDRlYy04YTBkLThkNTUyZTY3ODUzZCIsImVtYWlsIjoidHJhbGwxODExMTk4NUBnbWFpbC5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImdpdGh1YiIsInByb3ZpZGVycyI6WyJnaXRodWIiXX0sInVzZXJfbWV0YWRhdGEiOnsiYXZhdGFyX3VybCI6Imh0dHBzOi8vYXZhdGFycy5naXRodWJ1c2VyY29udGVudC5jb20vdS8xNjEwMDI1OTk_dj00IiwiZW1haWwiOiJ0cmFsbDE4MTExOTg1QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmdWxsX25hbWUiOiJLb25zdGFudGluIiwiaXNzIjoiaHR0cHM6Ly9hcGkuZ2l0aHViLmNvbSIsIm5hbWUiOiJLb25zdGFudGluIiwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJHcm9tLVphZGlyYTg1IiwicHJvdmlkZXJfaWQiOiIxNjEwMDI1OTkiLCJzdWIiOiIxNjEwMDI1OTkiLCJ1c2VyX25hbWUiOiJHcm9tLVphZGlyYTg1In0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoib2F1dGgiLCJ0aW1lc3RhbXAiOjE3MTg3NzgyNzd9XSwic2Vzc2lvbl9pZCI6ImQ3NmE3NGI2LWJlZjctNGEzYy05ZDU4LWFlOWY5MWE5YzU4ZSIsImlzX2Fub255bW91cyI6ZmFsc2V9.V3VhSModWq0vgB0KTDFHT6e9DLu-L06cLjJ2jaB9s2s"
-
-}
-
-
-def headers(x_task_id):
-    return {
-        "Authorization": AUTH_HEADER["Authorization"],
-        "X-Task-Id": x_task_id
-    }
-
-
-@pytest.fixture(scope="session", autouse=True)
-def setup_test_environment():
-    response = requests.post(f"{BASE_URL}/setup", headers=AUTH_HEADER)
-    assert response.status_code == 205
-
-
-@pytest.mark.xfail
-def test_delete_user(header):
-    # Step 1: Get user list
-    print(header)
-    response = requests.get(f"{BASE_URL}/users", headers=header)
-    assert response.status_code == 200
-    users = response.json()
-    assert len(users) > 0, "No users found"
-
-    # Step 2: Choose a user and get user uuid
-    user_uuid = users[0]['uuid']
-
-    # Step 3: Send DELETE request to delete the user
-    response = requests.delete(f"{BASE_URL}/users/{user_uuid}", headers=header)
-    assert response.status_code == 204
-
-    # Step 5: Validate that the user was deleted from the user list
-    response = requests.get(f"{BASE_URL}/users", headers=header)
-    assert response.status_code == 200
-    users = response.json()
-    assert not any(user['uuid'] == user_uuid for user in users), "User not deleted"
-
-    # Step 6: Verify that user information doesn't return
-    response = requests.get(f"{BASE_URL}/users/{user_uuid}", headers=header)
-    assert response.status_code == 404
