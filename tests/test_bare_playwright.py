@@ -58,9 +58,23 @@ def run_handle_check(playwright: Playwright) -> None:
     print("\n---END run_handle_check---\n")
 
 
+def run_screenshot_as_device(playwright: Playwright) -> None:
+    iphone_11 = playwright.devices['iPhone 11 Pro']
+    browser = playwright.webkit.launch(headless=False)
+    context = browser.new_context(
+        **iphone_11,
+        locale='en-US'
+    )
+    page = context.new_page()
+    page.goto('https://scrapingant.com')
+    page.screenshot(path='scrapingant-iphone.png')
+    browser.close()
+
+
 with sync_playwright() as playwright_context_manager:
     run_radio_buttons(playwright_context_manager)
     run_handle_check(playwright_context_manager)
+    run_screenshot_as_device(playwright_context_manager)
 
 
 def test_empty():
