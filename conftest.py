@@ -147,6 +147,13 @@ def handle_export(route, response):
     route.fulfill(status=200, json={"export": "export"})
 
 
+def on_web_socket(ws):
+    print(f"WebSocket opened: {ws.url}")
+    ws.on("framesent", lambda payload: print("Frame sent:", payload))
+    ws.on("framereceived", lambda payload: print("Frame received:", payload))
+    ws.on("close", lambda payload: print("WebSocket closed"))
+
+
 @pytest.fixture
 def page_my() -> Page:
     with sync_playwright() as playwright:
@@ -193,6 +200,7 @@ def page_my() -> Page:
         context.add_init_script("localStorage.setItem('isFirstUser', true)")
 
         page = context.new_page()
+        # page.on("websocket", on_web_socket)
         yield page
         page.close()
         browser.close()

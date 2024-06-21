@@ -2,7 +2,7 @@ from playwright.sync_api import Page, expect
 
 
 def test_pause(page_my: Page):
-    page_my.goto("https://apod-dev-d.osora.ru/employees/one/timesheet")
+    page_my.goto("https://apod-dev-d.osora.ru/employees/one/calendar")
     page_my.pause()
 
 
