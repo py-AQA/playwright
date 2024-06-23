@@ -74,7 +74,7 @@ def test_main_settings(page_my: Page):
     expect(page.locator('[testid="alertSubtitle"]')).to_have_text("Настройки сохранены")
 
 
-def test_employees_one_page(page_my: Page):
+def test_employees_one_card(page_my: Page):
     page = page_my
     page.goto('https://apod-dev-d.osora.ru/employees/one')
     page.get_by_label("Close").click()
