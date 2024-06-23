@@ -29,7 +29,6 @@ def test_reminder(page_my: Page):
     page.get_by_text("Напоминания").click()
     page.get_by_text("+ добавить напоминание").click()
 
-
     page.get_by_placeholder("Комментарий").last.click()
     page.get_by_placeholder("Комментарий").last.fill("time")
 
@@ -37,14 +36,12 @@ def test_reminder(page_my: Page):
 
     page.get_by_placeholder("Выберите дату").last.click()
     page.get_by_role("button", name="1 июня 2024 г.", exact=True).first.click()
-    # page.get_by_placeholder("Выберите дату").nth(2).click()
     page.locator("li").filter(has_text="Зациклить«‹июнь 2024").locator("path").first.click()
 
     page.get_by_text("Выберите время").last.click()
     page.get_by_text("04:30").click()
 
     page.get_by_text("Сохранить").click()
-    # page.pause()
     expect(page.locator('[testid="alertTitle"]')).to_have_text("Успех")
     page.get_by_text("Принять").click()
 
@@ -77,5 +74,18 @@ def test_main_settings(page_my: Page):
     expect(page.locator('[testid="alertSubtitle"]')).to_have_text("Настройки сохранены")
 
 
+def test_employees_one_page(page_my: Page):
+    page = page_my
+    page.goto('https://apod-dev-d.osora.ru/employees/one')
+    page.get_by_label("Close").click()
 
-
+    page.get_by_placeholder("@tgnickname").click()
+    page.get_by_placeholder("@tgnickname").fill("@Grom-Zadira")
+    page.get_by_placeholder("ФИО").fill("За орду!")
+    page.get_by_placeholder("Должность").fill("Нужно больше Золота!")
+    page.get_by_placeholder("Дата трудоустройства").fill("2022-02-23")
+    page.get_by_placeholder("Дата выхода").fill("2024-06-23")
+    page.locator('[placeholder="Время окончания смены"]').click()
+    page.locator('div:nth-child(7) > div:nth-child(2) > input').type("1745")
+    page.get_by_role("link", name="Сохранить").click()
+    # page.pause()
