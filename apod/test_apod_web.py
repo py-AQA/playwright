@@ -86,6 +86,7 @@ def test_employees_one_card(page_my: Page):
     page.get_by_placeholder("Дата трудоустройства").fill("2022-02-23")
     page.get_by_placeholder("Дата выхода").fill("2024-06-23")
     page.locator('[placeholder="Время окончания смены"]').click()
-    page.locator('div:nth-child(7) > div:nth-child(2) > input').type("1745")
+    # page.locator('div:nth-child(7) > div:nth-child(2) > input').type("1745")
+    page.locator('[name="endAt"]').type("1745")
     page.get_by_role("link", name="Сохранить").click()
     # page.pause()
