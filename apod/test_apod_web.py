@@ -95,7 +95,18 @@ def test_employees_one_card(page_my: Page):
 def test_settings(page_my: Page):
     page = page_my
     page.goto('https://apod-dev-d.osora.ru/settings')
-    # page.locator('[aria-label="11 июня 2020 г."]').fill()
-    page.locator('[for="customWeekends"]').click()
-    page.locator('[for="customWeekends"]').fill("11 июня 2020 г.")
-    page.locator('[for="customWeekends"]').fill("2022-06-23")
+    # Выбор даты вручную
+    # page.get_by_text("Индивидуальный").click()
+    # page.get_by_role("button", name="«").click()
+    # page.get_by_role("button", name="«").click()
+    # page.get_by_role("button", name="‹").click()
+    # page.get_by_role("button", name="‹").click()
+    # page.get_by_role("button", name="‹").click()
+    # page.get_by_role("button", name="‹").click()
+    # page.get_by_role("button", name="23 февраля 2022 г").click()
+    # page.get_by_text("Сохранить").nth(1).click()
+
+    # отправка даты
+    page.locator('[for="customWeekends"]').type("2022-02-23")
+    page.locator('[for="customWeekends"]').type("11 июня 2020 г.")
+
