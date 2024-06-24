@@ -1,5 +1,5 @@
 import pytest
-from playwright.sync_api import sync_playwright, Page
+from playwright.sync_api import sync_playwright, Page, Route, Request
 
 
 @pytest.fixture(scope="session")
@@ -26,6 +26,11 @@ def handle_get_timezone_list(route, response):
 
 def handle_post_timezone(route, response):
     route.fulfill(status=200, json={"aaaaaaaa": "aaaaa"})
+
+
+def handle_set_settings(request: Request):
+    if request.url.endswith("company/settings"):
+        print(">>> company/settings", request.post_data)
 
 
 def handle_get_settings(route, response):
@@ -165,6 +170,7 @@ def page_my() -> Page:
         context.route("**/api/admin-panel/timezone-list*", handle_get_timezone_list)
         context.route("**/api/admin-panel/timezone", handle_post_timezone)
 
+        context.route("**/api/admin-panel/company/settings", handle_set_settings)
         context.route("**/api/admin-panel/company/settings", handle_get_settings)
         context.route("**/api/admin-panel/company/settings/messages", handle_get_messages)
 
@@ -201,6 +207,8 @@ def page_my() -> Page:
 
         page = context.new_page()
         # page.on("websocket", on_web_socket)
+        page.on("request", handle_set_settings)
+
         yield page
         page.close()
         browser.close()
