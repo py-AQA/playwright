@@ -90,3 +90,12 @@ def test_employees_one_card(page_my: Page):
     page.locator('[name="endAt"]').type("1745")
     page.get_by_role("link", name="Сохранить").click()
     # page.pause()
+
+
+def test_settings(page_my: Page):
+    page = page_my
+    page.goto('https://apod-dev-d.osora.ru/settings')
+    # page.locator('[aria-label="11 июня 2020 г."]').fill()
+    page.locator('[for="customWeekends"]').click()
+    page.locator('[for="customWeekends"]').fill("11 июня 2020 г.")
+    page.locator('[for="customWeekends"]').fill("2022-06-23")
