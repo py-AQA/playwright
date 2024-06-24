@@ -29,8 +29,10 @@ def handle_post_timezone(route, response):
 
 
 def handle_set_settings(request: Request):
-    if request.url.endswith("company/settings"):
+    if request.url.endswith("company/settings") and request.post_data:
         print(">>> company/settings", request.post_data)
+        assert "27.07.2019" in json.loads(request.post_data)["weekendsDays"]
+        assert "17.06.2020" in json.loads(request.post_data)["workingDays"]
 
 
 def handle_get_settings(route, response):
@@ -133,6 +135,10 @@ def handle_absence_common_closest(route, response):
 
 
 def handle_absence_medical_closest(route, response):
+    route.fulfill(status=200, json={"medical_absence_closest": "medical_absence_closest"})
+
+
+def handle_absence_medical(route, response):
     route.fulfill(status=200, json={"medical_absence": "medical_absence"})
 
 
@@ -193,6 +199,7 @@ def page_my() -> Page:
         context.route("**/api/admin-panel/employees/*/absence/common", handle_absence_common)
         context.route("**/api/admin-panel/employees/*/absence/common/closest", handle_absence_common_closest)
         context.route("**/api/admin-panel/employees/*/absence/medical/closest", handle_absence_medical_closest)
+        context.route("**/api/admin-panel/employees/*/absence/medical", handle_absence_medical)
 
         context.route("**/api/admin-panel/employees/*/timesheet", handle_timesheet)
 
