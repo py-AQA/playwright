@@ -271,6 +271,27 @@ def test_employees_one_card(page_my: Page):
     page.get_by_placeholder("Дата трудоустройства").fill("2022-02-23")
     page.get_by_placeholder("Дата выхода").fill("2024-06-23")
     page.locator('[placeholder="Время окончания смены"]').click()
-    page.locator('div:nth-child(7) > div:nth-child(2) > input').type("1745")
+    # page.locator('div:nth-child(7) > div:nth-child(2) > input').type("1745")
+    page.locator('[name="endAt"]').type("1745")
     page.get_by_role("link", name="Сохранить").click()
     # page.pause()
+
+
+def test_settings(page_my: Page):
+    page = page_my
+    page.goto('https://apod-dev-d.osora.ru/settings')
+    # Выбор даты вручную
+    # page.get_by_text("Индивидуальный").click()
+    # page.get_by_role("button", name="«").click()
+    # page.get_by_role("button", name="«").click()
+    # page.get_by_role("button", name="‹").click()
+    # page.get_by_role("button", name="‹").click()
+    # page.get_by_role("button", name="‹").click()
+    # page.get_by_role("button", name="‹").click()
+    # page.get_by_role("button", name="23 февраля 2022 г").click()
+    # page.get_by_text("Сохранить").nth(1).click()
+
+    # отправка даты
+    page.locator('[for="customWeekends"]').type("2022-02-23")
+    page.locator('[for="customWeekends"]').type("11 июня 2020 г.")
+
