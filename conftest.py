@@ -171,7 +171,9 @@ def on_web_socket(ws):
 def page_my() -> Page:
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=False)
-        context = browser.new_context()
+        context = browser.new_context(
+            locale='ru-RU'
+        )
 
         context.route("**/api/admin-panel/login-via-telegram/apod-dev-d", handle_login_via_telegram)
 
