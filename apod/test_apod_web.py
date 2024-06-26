@@ -1,6 +1,6 @@
 import re
 
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page, expect, Request
 
 from apod.apod_calendar import ApodCalendar
 
@@ -266,6 +266,10 @@ def test_employees_one_card(page_my: Page):
     # page.pause()
 
 
+def interception(request: Request):
+    print(request.url, request.post_data)
+
+
 def test_settings(page_my: Page):
     page = page_my
     page.goto('https://apod-dev-d.osora.ru/settings')
@@ -280,6 +284,17 @@ def test_settings(page_my: Page):
     # page.get_by_role("button", name="23 февраля 2022 г").click()
     # page.get_by_text("Сохранить").nth(1).click()
 
-    # отправка даты
+    # дата не выбирается, test passed
+    page.on("request", interception)
+    page.get_by_text("Индивидуальный").click()
     page.locator('[for="customWeekends"]').type("2022-02-23")
     page.locator('[for="customWeekends"]').type("11 июня 2020 г.")
+    page.get_by_text("Сохранить").nth(1).click()
+
+    # отправка даты работает, если выбираемая дата not visible
+    page.get_by_text("Индивидуально").click()
+    page.get_by_role("button", name="28 июня 2024 г").click()
+    page.get_by_text("Сохранить").nth(1).click()
+
+    page.get_by_text("Сохранить").click()
+    page.get_by_text("Принять").click()
