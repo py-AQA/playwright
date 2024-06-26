@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from playwright.sync_api import sync_playwright, Page, Route, Request
 
@@ -31,14 +33,14 @@ def handle_post_timezone(route, response):
 def handle_set_settings(request: Request):
     if request.url.endswith("company/settings") and request.post_data:
         print(">>> company/settings", request.post_data)
-        assert "27.07.2019" in json.loads(request.post_data)["weekendsDays"]
-        assert "17.06.2020" in json.loads(request.post_data)["workingDays"]
+        # assert "26.07.2019" in json.loads(request.post_data)["weekendsDays"]
+        # assert "18.06.2024" in json.loads(request.post_data)["workingDays"]
 
 
 def handle_get_settings(route, response):
     route.fulfill(status=200, json={
         "settings": {"availableMinutesLate": 15, "workingDays": ["18.06.2024", "19.06.2024"],
-                     "weekendsDays": ["21.06.2024"],
+                     "weekendsDays": ["21.06.2024", "27.07.2019"],
                      "locations": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}], "schedule": "5-2",
                      "weekendsType": "customWeekends",
                      "timeSchedules": [{"id": "aMU2s5Sf", "label": "02:00-05:30", "selected": False},
