@@ -7,7 +7,7 @@ from apod.apod_calendar import ApodCalendar
 
 def test_pause(page_my: Page):
     page_my.goto("https://apod-dev-d.osora.ru/settings")
-    # page_my.pause()
+    page_my.pause()
 
 
 def test_choose_employee_statistics_display_date_period(page_my: Page):
@@ -266,6 +266,10 @@ def test_employees_one_card(page_my: Page):
     # page.pause()
 
 
+def interception(request: Request):
+    print(request.url, request.post_data)
+
+
 def test_settings(page_my: Page):
     page = page_my
     page.goto('https://apod-dev-d.osora.ru/settings')
@@ -280,9 +284,32 @@ def test_settings(page_my: Page):
     # page.get_by_role("button", name="23 февраля 2022 г").click()
     # page.get_by_text("Сохранить").nth(1).click()
 
-    # отправка даты
+    # дата не выбирается, test passed
+    page.on("request", interception)
+    page.get_by_text("Индивидуальный").click()
     page.locator('[for="customWeekends"]').type("2022-02-23")
     page.locator('[for="customWeekends"]').type("11 июня 2020 г.")
+
+
+
+def handle_work_calendar(request: Request):
+    print(request.method, request.url, request.post_data)
+
+
+def test_work_calendar(page_my: Page):
+    page = page_my
+    page.goto('https://apod-dev-d.osora.ru/employees/one/calendar')
+    page.on('request', handle_work_calendar)
+    page.locator("div").filter(has_text=re.compile(r"^Не выбрано$")).locator("svg").click()
+    # page.locator("li").filter(has_text="Отгул").locator("span").click()
+    page.locator("li").filter(has_text="Рабочий график").locator("span").click()
+    page.locator("label").filter(has_text="2-").click()
+    page.get_by_role("button", name="›").click()
+    page.get_by_role("button", name="1 июля 2024 г.", exact=True).click()
+    page.get_by_role("button", name="2 июля 2024 г.", exact=True).click()
+    page.get_by_role("button", name="3 июля 2024 г.", exact=True).click()
+
+    page.get_by_text("Запланировать").click()
 
 
 def method(request: Request):
@@ -348,4 +375,5 @@ def test_admin_check_hourly_new_employee(page_my: Page):
 
     page.locator("input[name=\"specialization\"]").fill("Engineer")
     page.get_by_text("Добавить").click()
+
     page.get_by_text("Принять").click()
