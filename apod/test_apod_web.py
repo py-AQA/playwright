@@ -289,12 +289,77 @@ def test_settings(page_my: Page):
     page.get_by_text("Индивидуальный").click()
     page.locator('[for="customWeekends"]').type("2022-02-23")
     page.locator('[for="customWeekends"]').type("11 июня 2020 г.")
-    page.get_by_text("Сохранить").nth(1).click()
 
-    # отправка даты работает, если выбираемая дата not visible
+
+
+def method(request: Request):
+    print(request.url)
+    print(request.post_data)
+
+
+def test_admin_check_monthly(page_my: Page):
+    page = page_my
+    page.goto('https://apod-dev-d.osora.ru/employees/one/paymentSystem')
+    page.on("request", method)
+    page.locator("input[name=\"salary\"]").fill("10000")
+    page.get_by_role("spinbutton").fill("10000")
+    page.locator("input[name=\"comment\"]").fill("Премия")
+    page.locator("div").filter(has_text=re.compile(r"^Дата начисления$")).locator("svg").click()
+    page.get_by_role("button", name="»").click()
+    page.get_by_role("button", name="25 июня 2025 г").click()
+    page.locator("div:nth-child(3) > div > .svg-inline--fa > path").click()
+    page.get_by_text("Сохранить").nth(1).click()
+    page.get_by_text("Сохранить").first.click()
+    page.get_by_text("Принять").click()
+
+
+def test_admin_check_hourly_payment_system(page_my: Page):
+    page = page_my
+    page.goto('https://apod-dev-d.osora.ru/employees/one/paymentSystem')
+    page.on("request", method)
+    page.get_by_text("Почасовая").click()
+    page.locator("input[name=\"hourlyRate\"]").fill("1000")
+    page.locator("input[name=\"overworkMultiplyRate\"]").fill("2000")
+    page.get_by_text("Добавить прогрессивную ставку").click()
+    page.locator("input[name=\"payRateByHour\"]").click()
+    page.locator("div:nth-child(4) > div > .flex > .hover\\:cursor-pointer > div > .svg-inline--fa > path").click()
+    page.get_by_text("Добавить прогрессивную ставку").click()
+    page.locator("input[name=\"payRateByHour\"]").fill("15000")
+
+    page.locator("input[name=\"bonus\"]").fill("15000")
+    page.locator("input[name=\"comment\"]").fill("Премия")
+    page.get_by_placeholder("Дата").click()
+
+    page.get_by_role("button", name="30 июня 2024 г").click()
+
+    page.locator("html").click()
+    page.get_by_text("Сохранить").nth(1).click()
+    page.get_by_text("Сохранить").first.click()
+    page.get_by_text("Принять").click()
+
+
+def test_admin_check_hourly_new_employee(page_my: Page):
+    page = page_my
+    page.goto('https://apod-dev-d.osora.ru/employees/newEmployee')
+    page.on("request", method)
+
+    page.locator("input[name=\"username\"]").fill("darius_25")
+    page.get_by_text("Почасовая").click()
+
+    page.get_by_text("2-").click()
+
+    page.locator("input[name=\"employmentDate\"]").fill("2015-06-22")
+    page.locator("input[name=\"exitDate\"]").fill("2015-06-25")
+
+    page.locator("input[name=\"fullName\"]").fill("Darius")
+
+    page.locator("input[name=\"specialization\"]").fill("Engineer")
+    page.get_by_text("Добавить").click()
+
+
+
     page.get_by_text("Индивидуально").click()
     page.get_by_role("button", name="28 июня 2024 г").click()
     page.get_by_text("Сохранить").nth(1).click()
 
-    page.get_by_text("Сохранить").click()
     page.get_by_text("Принять").click()
