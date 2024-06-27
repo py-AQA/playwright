@@ -377,9 +377,4 @@ def test_admin_check_hourly_new_employee(page_my: Page):
     page.get_by_text("Добавить").click()
 
 
-
-    page.get_by_text("Индивидуально").click()
-    page.get_by_role("button", name="28 июня 2024 г").click()
-    page.get_by_text("Сохранить").nth(1).click()
-
     page.get_by_text("Принять").click()
