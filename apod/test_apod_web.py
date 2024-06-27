@@ -376,4 +376,5 @@ def test_admin_check_hourly_new_employee(page_my: Page):
     page.locator("input[name=\"specialization\"]").fill("Engineer")
     page.get_by_text("Добавить").click()
 
+
     page.get_by_text("Принять").click()
