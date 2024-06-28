@@ -336,8 +336,7 @@ def test_add_four_ind_days_LK(page_my: Page):
     page.get_by_text("Запланировать").click()
     expect(page.locator('[testid="alertTitle"]')).to_have_text("Успех")
     page.get_by_text("Принять").click()
-    #page.get_by_label("Close").click()
-
+    # page.get_by_label("Close").click()
 
 
 def test_add_employee_with_5_2_LK(page_my: Page):
@@ -359,9 +358,29 @@ def test_add_employee_with_5_2_LK(page_my: Page):
     page.get_by_text("Принять").click()
 
 
-
-
-
-
-
-
+def test_add_settings_Ind_employee_LK(page_my: Page):
+    page_my.goto("https://apod-dev-d.osora.ru/employees/one/calendar")
+    page_my.pause()
+    page = page_my
+    page.get_by_role("link", name="Настройки").click()
+    page.get_by_text("Индивидуальный").click()
+    page.get_by_role("button", name="›").click()
+    page.get_by_role("button", name="9 июля 2024 г.", exact=True).click()
+    page.get_by_role("button", name="11 июля 2024 г").click()
+    page.get_by_role("button", name="12 июля 2024 г").click()
+    page.get_by_text("Сохранить").nth(1).click()
+    page.locator("div").filter(has_text=re.compile(r"^Начало рабочего дняВыберите время$")).locator("svg").click()
+    page.get_by_text("08:00").click()
+    page.locator("div").filter(has_text=re.compile(r"^Выберите время$")).locator("svg").click()
+    page.get_by_text("17:00").click()
+    page.locator("input[name=\"name\"]").click()
+    page.locator("input[name=\"name\"]").fill("LK")
+    page.locator("input[name=\"latitude\"]").click()
+    page.locator("input[name=\"latitude\"]").fill("2")
+    page.locator("input[name=\"longitude\"]").click()
+    page.locator("input[name=\"longitude\"]").fill("4")
+    page.locator("input[name=\"radius\"]").click()
+    page.locator("input[name=\"radius\"]").fill("5")
+    page.get_by_text("Сохранить").click()
+    expect(page.locator('[testid="alertTitle"]')).to_have_text("Успех")
+    page.get_by_text("Принять").click()
