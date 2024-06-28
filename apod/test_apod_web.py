@@ -80,6 +80,7 @@ def test_calendar_plan_vacation(page_my: Page):
 
     page_my.get_by_text("Запланировать").click()
     expect(page_my.locator('[testid="alertTitle"]')).to_have_text("Успех")
+    page_my.pause()
     page_my.get_by_text("Принять").click()
 
 
@@ -91,7 +92,7 @@ def test_calendar_plan_medical(page_my: Page):
     page_my.locator("li").filter(has_text="Больничный").locator("span").click()
 
     ApodCalendar(page_my.locator("div.react-calendar")).set_period('2019-07-07', '2020-06-17')
-    # page_my.pause()
+    page_my.pause()
 
     page_my.get_by_text("Запланировать").click()
     expect(page_my.locator('[testid="alertTitle"]')).to_have_text("Успех")
@@ -298,3 +299,42 @@ def test_settings(page_my: Page):
 
     page.get_by_text("Сохранить").click()
     page.get_by_text("Принять").click()
+
+
+def test_test(page_my: Page):
+    page_my.goto("https://apod-dev-d.osora.ru/employees/one/calendar")
+    page_my.pause()
+    page = page_my
+    page.locator("div").filter(has_text=re.compile(r"^Не выбрано$")).locator("svg").click()
+    page.locator("li").filter(has_text="Рабочий график").locator("span").click()
+    page.get_by_text("2-").click()
+    page.get_by_text("-1").click()
+    page.get_by_text("индивидуально").click()
+    page.get_by_text("индивидуально", exact=True).click()
+    page.get_by_role("button", name="›").click()
+    page.get_by_role("button", name="10 июля 2024 г").click()
+    page.get_by_role("button", name="11 июля 2024 г").click()
+    page.get_by_role("button", name="12 июля 2024 г").click()
+    page.locator(".h-1\\.5").first.click()
+    page.get_by_text("Запланировать").click()
+    expect(page.locator('[testid="alertTitle"]')).to_have_text("Успех")
+    page.get_by_text("Принять").click()
+
+
+def test_add_four_ind_days_LK(page_my: Page):
+    page_my.goto("https://apod-dev-d.osora.ru/employees/one/calendar")
+    page_my.pause()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
