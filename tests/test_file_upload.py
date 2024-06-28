@@ -44,7 +44,7 @@ def test_section2_lesson2_step8_upload_file_via_set_input_files_only(page: Page)
     page.goto("http://suninjuly.github.io/file_input.html")
 
     page.get_by_placeholder("Enter first name").fill("Olga")
-    page.get_by_placeholder("Enter last name").fill("Olga")
+    page.get_by_placeholder("Enter last name").fill("Oko")
     page.get_by_placeholder("Enter email").fill("tb@gmail.com")
 
     page.set_input_files('input[type="file"]', "test_file.txt")
