@@ -324,8 +324,18 @@ def test_test(page_my: Page):
 def test_add_four_ind_days_LK(page_my: Page):
     page_my.goto("https://apod-dev-d.osora.ru/employees/one/calendar")
     page_my.pause()
-
-
+    page = page_my
+    page.locator("div").filter(has_text=re.compile(r"^Не выбрано$")).click()
+    page.locator("li").filter(has_text="Отпуск").locator("span").click()
+    page.get_by_role("button", name="›").click()
+    page.get_by_role("button", name="›").click()
+    page.get_by_role("button", name="6 августа 2024 г.", exact=True).click()
+    page.get_by_role("button", name="7 августа 2024 г.", exact=True).click()
+    page.get_by_role("button", name="8 августа 2024 г.", exact=True).click()
+    page.get_by_role("button", name="9 августа 2024 г.", exact=True).click()
+    page.get_by_text("Запланировать").click()
+    page.get_by_text("Принять").click()
+    page.get_by_label("Close").click()
 
 
 
