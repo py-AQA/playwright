@@ -334,12 +334,29 @@ def test_add_four_ind_days_LK(page_my: Page):
     page.get_by_role("button", name="8 августа 2024 г.", exact=True).click()
     page.get_by_role("button", name="9 августа 2024 г.", exact=True).click()
     page.get_by_text("Запланировать").click()
+    expect(page.locator('[testid="alertTitle"]')).to_have_text("Успех")
     page.get_by_text("Принять").click()
-    page.get_by_label("Close").click()
+    #page.get_by_label("Close").click()
 
 
 
-
+def test_add_employee_with_5_2_LK(page_my: Page):
+    page_my.goto("https://apod-dev-d.osora.ru/employees/one/calendar")
+    page_my.pause()
+    page = page_my
+    page.locator("div").filter(has_text=re.compile(r"^импортэкспортfnonespecfntwospec$")).get_by_role("link").click()
+    page.locator("input[name=\"username\"]").click()
+    page.locator("input[name=\"username\"]").fill("My_Nickname")
+    page.locator("input[name=\"fullName\"]").click()
+    page.locator("input[name=\"fullName\"]").fill("Fname Lname")
+    page.locator("input[name=\"specialization\"]").click()
+    page.locator("input[name=\"specialization\"]").fill("IT")
+    page.get_by_text("5-").click()
+    page.locator("input[name=\"employmentDate\"]").fill("2024-07-10")
+    page.locator("input[name=\"exitDate\"]").fill("2024-07-11")
+    page.get_by_text("Добавить").click()
+    expect(page.locator('[testid="alertTitle"]')).to_have_text("Успех")
+    page.get_by_text("Принять").click()
 
 
 
