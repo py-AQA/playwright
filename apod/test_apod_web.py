@@ -1,6 +1,6 @@
 import re
 
-from playwright.sync_api import Page, expect, Request
+from playwright.sync_api import Page, expect, Request, Route
 
 from apod.apod_calendar import ApodCalendar
 
@@ -464,3 +464,60 @@ def test_add_settings_Ind_employee_LK(page_my: Page):
     page.get_by_text("Сохранить").click()
     expect(page.locator('[testid="alertTitle"]')).to_have_text("Успех")
     page.get_by_text("Принять").click()
+
+def test_redirect_to_employee_info(page_my: Page):
+    """ Переход на страницу работника с информацией"""
+    page = page_my
+    
+    page.goto("https://apod-dev-d.osora.ru/employees/one")
+    page.get_by_label("Close").click()
+
+    #Opens new page with employee info
+    with page.expect_popup() as new_page:
+        page.locator("ul").filter(has_text="C3").get_by_role("link").first.click()
+    page1 = new_page.value
+    page1.get_by_label("Close").click()
+
+    expect(page1).to_have_url(re.compile('https://apod-dev-d.osora.ru/employees/urltg'))
+    expect(page1.get_by_text("Информация по сотруднику")).to_be_visible()
+    page.pause()
+
+def test_add_new_employee(page_my: Page):
+    """ Проверка создания нового сотрудника в системе (mocking) """
+    page = page_my
+
+    # Monitoring request and response packets
+    page.on("request", lambda req: print(">>>: " + req.method,req.post_data))
+    page.on("response" , lambda res: print(" <<<: " + str(res.status), res.body()))
+    
+    page.goto("https://apod-dev-d.osora.ru/employees/newEmployee")
+
+    # Fills forms of new employee
+    page.locator("input[name='username']").fill("@vladi")
+    page.locator("input[name='fullName']").fill("Le Alfonse")
+    page.locator("input[name='specialization']").fill("General")
+    page.locator("input[name='employmentDate']").fill("2024-06-29")
+
+    # Keeps value of Name and Specialization fields
+    full_name = page.locator("input[name='fullName']").input_value()
+    spec = page.locator("input[name='specialization']").input_value()
+
+    # Mock API request with data from a form
+    page.route(
+        "**/api/admin-panel/employees", 
+        lambda route: route.fulfill(status=200, json={"employees": [
+                {
+                    "id": "777",
+                    "companyId": "89",
+                    "companyWorkplaces": 'null',
+                    "fullName": full_name,
+                    "specialization": spec,
+                    "urlTG": "@vlad"}]}))
+    
+    page.get_by_text("Добавить").click()
+
+    expect(page.locator("[id='__next']")).to_contain_text("Сотрудник добавлен")
+
+    page.get_by_text("Принять").click()
+
+    expect(page.get_by_role("heading")).to_contain_text(full_name)
