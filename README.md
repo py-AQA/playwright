@@ -1,5 +1,7 @@
 # playwright
 
+- GitHub Project https://github.com/orgs/py-AQA/projects/3
+---
 - Stepik "Автоматизация тестирования с помощью Playwright Python" https://stepik.org/course/128626/syllabus
 - Playwright network https://playwright.dev/python/docs/network
 - Playwright mock https://playwright.dev/python/docs/mock
