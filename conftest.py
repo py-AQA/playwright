@@ -111,9 +111,11 @@ def handle_statistic(route, response):
 
 def handle_reminder(route, response):
     route.fulfill(status=200, json={"reminders": [
-        {"status": "status", "comment": "string", "date": "string", "startAt": "string", "endAt": "string",
-         "minutesLate": 12},
-        {"loop": True, "reminderDate": "", "reminderTime": "11:11"}]})
+        {"comment": "first reminder", "reminderDate": "2024-06-20", "reminderTime": "23:30", "loop": False},
+        {"comment": "second reminder", "reminderDate": "2024-06-21", "reminderTime": "23:30", "loop": True},
+        # {"status": "status", "comment": "string", "date": "string", "startAt": "string", "endAt": "string", "minutesLate": 12},
+        # {"loop": True, "reminderDate": "", "reminderTime": "11:11"}
+    ]})
 
 
 def handle_store(route, response):

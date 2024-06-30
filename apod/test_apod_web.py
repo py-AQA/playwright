@@ -1,3 +1,4 @@
+import json
 import re
 
 from playwright.sync_api import Page, expect, Request, Route
@@ -7,7 +8,7 @@ from apod.apod_calendar import ApodCalendar
 
 def test_pause(page_my: Page):
     page_my.goto("https://apod-dev-d.osora.ru/settings")
-    page_my.pause()
+    # page_my.pause()
 
 
 def test_choose_employee_statistics_display_date_period(page_my: Page):
@@ -203,7 +204,7 @@ def test_reminder(page_my: Page):
     page.goto("https://apod-dev-d.osora.ru/employees/one/timesheet")
     page.get_by_text("Напоминания").click()
     page.get_by_text("+ добавить напоминание").click()
-
+    page.pause()
     page.get_by_placeholder("Комментарий").last.click()
     page.get_by_placeholder("Комментарий").last.fill("time")
 
@@ -322,6 +323,7 @@ def test_admin_check_monthly(page_my: Page):
     page = page_my
     page.goto('https://apod-dev-d.osora.ru/employees/one/paymentSystem')
     page.on("request", method)
+    page.pause()
     page.locator("input[name=\"salary\"]").fill("10000")
     page.get_by_role("spinbutton").fill("10000")
     page.locator("input[name=\"comment\"]").fill("Премия")
@@ -363,7 +365,7 @@ def test_admin_check_hourly_new_employee(page_my: Page):
     page = page_my
     page.goto('https://apod-dev-d.osora.ru/employees/newEmployee')
     page.on("request", method)
-
+    page.pause()
     page.locator("input[name=\"username\"]").fill("darius_25")
     page.get_by_text("Почасовая").click()
 
