@@ -1,7 +1,6 @@
-import json
 import re
 
-from playwright.sync_api import Page, expect, Request, Route
+from playwright.sync_api import Page, expect, Request
 
 from apod.apod_calendar import ApodCalendar
 
@@ -252,24 +251,27 @@ def test_main_settings(page_my: Page):
 
 def test_employees_one_card(page_my: Page):
     page = page_my
-    page.goto('https://apod-dev-d.osora.ru/employees/one')
-    page.get_by_label("Close").click()
-
-    page.get_by_placeholder("@tgnickname").click()
-    page.get_by_placeholder("@tgnickname").fill("@Grom-Zadira")
-    page.get_by_placeholder("ФИО").fill("За орду!")
-    page.get_by_placeholder("Должность").fill("Нужно больше Золота!")
-    page.get_by_placeholder("Дата трудоустройства").fill("2022-02-23")
-    page.get_by_placeholder("Дата выхода").fill("2024-06-23")
-    page.locator('[placeholder="Время окончания смены"]').click()
-    # page.locator('div:nth-child(7) > div:nth-child(2) > input').type("1745")
-    page.locator('[name="endAt"]').type("1745")
-    page.get_by_role("link", name="Сохранить").click()
+    page.goto('https://apod-dev-d.osora.ru/employees/three')
+    page.on("request", interception)
+    page.pause()
+    #
+    # page.get_by_label("Close").click()
+    #
+    # page.get_by_placeholder("@tgnickname").click()
+    # page.get_by_placeholder("@tgnickname").fill("@Grom-Zadira")
+    # page.get_by_placeholder("ФИО").fill("За орду!")
+    # page.get_by_placeholder("Должность").fill("Нужно больше Золота!")
+    # page.get_by_placeholder("Дата трудоустройства").fill("2022-02-23")
+    # page.get_by_placeholder("Дата выхода").fill("2024-06-23")
+    # page.locator('[placeholder="Время окончания смены"]').click()
+    # # page.locator('div:nth-child(7) > div:nth-child(2) > input').type("1745")
+    # page.locator('[name="endAt"]').type("1745")
+    # page.get_by_role("link", name="Сохранить").click()
     # page.pause()
 
 
 def interception(request: Request):
-    print(request.url, request.post_data)
+    print(request.method, request.url, request.post_data)
 
 
 def test_settings(page_my: Page):
@@ -291,7 +293,6 @@ def test_settings(page_my: Page):
     page.get_by_text("Индивидуальный").click()
     page.locator('[for="customWeekends"]').type("2022-02-23")
     page.locator('[for="customWeekends"]').type("11 июня 2020 г.")
-
 
 
 def handle_work_calendar(request: Request):
@@ -378,7 +379,6 @@ def test_admin_check_hourly_new_employee(page_my: Page):
 
     page.locator("input[name=\"specialization\"]").fill("Engineer")
     page.get_by_text("Добавить").click()
-
 
     page.get_by_text("Принять").click()
 
@@ -467,14 +467,15 @@ def test_add_settings_Ind_employee_LK(page_my: Page):
     expect(page.locator('[testid="alertTitle"]')).to_have_text("Успех")
     page.get_by_text("Принять").click()
 
+
 def test_redirect_to_employee_info(page_my: Page):
     """ Переход на страницу работника с информацией"""
     page = page_my
-    
+
     page.goto("https://apod-dev-d.osora.ru/employees/one")
     page.get_by_label("Close").click()
 
-    #Opens new page with employee info
+    # Opens new page with employee info
     with page.expect_popup() as new_page:
         page.locator("ul").filter(has_text="C3").get_by_role("link").first.click()
     page1 = new_page.value
@@ -484,14 +485,15 @@ def test_redirect_to_employee_info(page_my: Page):
     expect(page1.get_by_text("Информация по сотруднику")).to_be_visible()
     page.pause()
 
+
 def test_add_new_employee(page_my: Page):
     """ Проверка создания нового сотрудника в системе (mocking) """
     page = page_my
 
     # Monitoring request and response packets
-    page.on("request", lambda req: print(">>>: " + req.method,req.post_data))
-    page.on("response" , lambda res: print(" <<<: " + str(res.status), res.body()))
-    
+    page.on("request", lambda req: print(">>>: " + req.method, req.post_data))
+    page.on("response", lambda res: print(" <<<: " + str(res.status), res.body()))
+
     page.goto("https://apod-dev-d.osora.ru/employees/newEmployee")
 
     # Fills forms of new employee
@@ -506,16 +508,16 @@ def test_add_new_employee(page_my: Page):
 
     # Mock API request with data from a form
     page.route(
-        "**/api/admin-panel/employees", 
+        "**/api/admin-panel/employees",
         lambda route: route.fulfill(status=200, json={"employees": [
-                {
-                    "id": "777",
-                    "companyId": "89",
-                    "companyWorkplaces": 'null',
-                    "fullName": full_name,
-                    "specialization": spec,
-                    "urlTG": "@vlad"}]}))
-    
+            {
+                "id": "777",
+                "companyId": "89",
+                "companyWorkplaces": 'null',
+                "fullName": full_name,
+                "specialization": spec,
+                "urlTG": "@vlad"}]}))
+
     page.get_by_text("Добавить").click()
 
     expect(page.locator("[id='__next']")).to_contain_text("Сотрудник добавлен")
@@ -523,6 +525,8 @@ def test_add_new_employee(page_my: Page):
     page.get_by_text("Принять").click()
 
     expect(page.get_by_role("heading")).to_contain_text(full_name)
+
+    page.pause()
 
 
 def test_employees_calendar_set_limits(page_my: Page):
@@ -550,4 +554,3 @@ def test_employees_calendar_set_limits(page_my: Page):
     page_my.get_by_text("Сохранить").click()
     page_my.get_by_text("Принять").click()
     page_my.pause()
-
