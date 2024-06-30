@@ -66,10 +66,19 @@ def handle_get_messages(route, response):
 def handle_get_employees(route, response):
     route.fulfill(status=200, json={
         "employees": [
-            {"id": "one", "companyId": "company", "companyWorkplaces": None, "fullName": "fnone",
-             "specialization": "spec", "urlTG": "urltg"},
-            {"id": "two", "companyId": "company", "companyWorkplaces": None, "fullName": "fntwo",
-             "specialization": "spec", "urlTG": "urltg"}
+            {"id": "one",
+             "companyId": "company",
+             "companyWorkplaces": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}],
+             "fullName": "fullname one",
+             "paymentSystem": "hourly", "schedule": "2-2", "specialization": "spec", "urlTG": "urltg"},
+            {"id": "two", "companyId": "company",
+             "companyWorkplaces": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}],
+             "fullName": "fullName two",
+             "paymentSystem": "hourly", "schedule": "2-2", "specialization": "spec", "urlTG": "urltg"},
+            {"id": "three", "companyId": "company",
+             "companyWorkplaces": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}],
+             "fullName": "fullName three",
+             "paymentSystem": "hourly", "schedule": "2-2", "specialization": "spec", "urlTG": "urltg"}
         ]})
 
 
@@ -90,19 +99,97 @@ def handle_urltg(route, response):
 
 
 def handle_schedule(route, response):
-    route.fulfill(status=200, json={"schedule": "schedule"})
+    route.fulfill(status=200, json={"workingDays": ["18.06.2024", "19.06.2024"]})
 
 
 def handle_one(route, response):
-    route.fulfill(status=200, json={"one": "one"})
+    route.fulfill(status=200, json={"employee": {
+        "id": "one",
+        "username": "@sbdfkjsd1",
+        "companyId": "company",
+        "employment_date": "2024-07-04",
+        "exit_date": "2024-07-18",
+        "workingDays": ["18.06.2024", "19.06.2024"],
+        "companyWorkplaces": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}],
+        "fullName": "full name above for user one",
+        # "timeSchedules": [{"id": "aMU2s5Sf", "label": "02:00-05:30", "selected": False}],
+        "timeSchedule": [{"id": "aMU3s5Sf", "label": "02:00-05:30", "selected": False}],
+        "schedule": ["2-2"],
+        "schedules": ["2-2"],
+        "roleId": "Admin",
+        "roles": [{"id": 0, "title": "Role title 1"}],
+        "paymentSystem": "hourly",
+        # "schedule": "2-2",
+        "confirmGeo": True,
+        "specialization": "spec",
+        "information": ["item two", "item two", "item two", "item two", "item two"],
+        "locations": ["location1", "location2", "name1"],
+        "urlTG": "urltg"}})
 
 
 def handle_two(route, response):
-    route.fulfill(status=200, json={"two": "two"})
+    route.fulfill(status=200, json={"employee": {
+        "id": "two",
+        "username": "@sbdfkjsd2",
+        "companyId": "company",
+        "workingDays": ["18.06.2024", "19.06.2024"],
+        "companyWorkplaces": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}],
+        "fullName": "fntwo",
+        # "timeSchedules": [{"id": "aMU2s5Sf", "label": "02:00-05:30", "selected": False}],
+        "timeSchedule": [{"id": "aMU3s5Sf", "label": "02:00-05:30", "selected": False}],
+        "schedule": ["2-2"],
+        "schedules": ["2-2"],
+        "roleId": 2,
+        "roles": [{"id": 1, "title": "title1"}],
+        "paymentSystem": "hourly",
+        # "schedule": "2-2",
+        "specialization": "spec",
+        "information": ["item one", "item two"],
+        "locations": ["location1", "location2", "name1"],
+        "urlTG": "urltg"}})
+
+
+def handle_3(route, response):
+    route.fulfill(status=200, json={"employee": {
+        "id": "three",
+        "username": "@sbdfkjsd3",
+        "companyId": "company",
+        "workingDays": ["18.06.2024", "19.06.2024"],
+        "companyWorkplaces": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}],
+        "fullName": "full name three above",
+        # "timeSchedules": [{"id": "aMU2s5Sf", "label": "02:00-05:30", "selected": False}],
+        "timeSchedule": [{"id": "aMU3s5Sf", "label": "02:00-05:30", "selected": False}],
+        "schedule": ["2-2"],
+        "schedules": ["2-2"],
+        "roleId": 3,
+        "roles": [{"id": 0, "title": "title2"}, {"id": 1, "title": "title2"}, {"id": 2, "title": "title2"},
+                  {"id": 3, "title": "title2"}],
+        "paymentSystem": "hourly",
+        # "schedule": "2-2",
+        "specialization": "spec three above",
+        "information": ["item one", "item two", "item two", "item two", "item two", "item two", "item two", "item two"],
+        "locations": ["location1", "location2", "name1"],
+        "urlTG": "urltg"}})
 
 
 def handle_archive(route, response):
-    route.fulfill(status=200, json={"archive": "archive"})
+    route.fulfill(status=200, json={
+        "title_of_period": [
+            {"type": "Отгул", "period": "2024-06-21"},
+            {"type": "Отгул", "period": "2024-06-22"},
+            {"type": "Отгул", "period": "2024-07-22"}
+        ],
+        "title_of_period_two": [
+            {"type": "Отгул", "period": "2023-06-21"},
+            {"type": "Отгул", "period": "2023-06-22"},
+            {"type": "Отгул", "period": "2023-07-22"}
+        ],
+        "title_of_period_three": [
+            {"type": "Отгул", "period": "2023-06-21"},
+            {"type": "Отгул", "period": "2023-06-22"},
+            {"type": "Отгул", "period": "2023-07-22"}
+        ]
+    })
 
 
 def handle_statistic(route, response):
@@ -119,31 +206,35 @@ def handle_reminder(route, response):
 
 
 def handle_store(route, response):
-    route.fulfill(status=200)
+    route.fulfill(status=200, json={"ok": "ok"})
 
 
 def handle_timesheet_search(route, response):
-    route.fulfill(status=200)
+    route.fulfill(status=200, json={"ok": "ok"})
+
+
+def handle_update(route, response):
+    route.fulfill(status=200, json={"ok": "ok"})
 
 
 def handle_absence(route, response):
-    route.fulfill(status=200, json={"absence": "absence"})
+    route.fulfill(status=200, json={"dates": ["2024-01-01", "2024-02-01"]})
 
 
 def handle_absence_common(route, response):
-    route.fulfill(status=200, json={"absence_common": "absence_common"})
+    route.fulfill(status=200, json={"dates": ["2024-01-01", "2024-02-01", "2024-03-01"]})
 
 
 def handle_absence_common_closest(route, response):
-    route.fulfill(status=200, json={"common_absence": "common_absence"})
+    route.fulfill(status=200, json={"dates": ["2024-01-01", "2024-02-01", "2024-03-01"]})
 
 
 def handle_absence_medical_closest(route, response):
-    route.fulfill(status=200, json={"medical_absence_closest": "medical_absence_closest"})
+    route.fulfill(status=200, json={"dates": ["2023-01-01", "2023-02-01", "2023-03-01"]})
 
 
 def handle_absence_medical(route, response):
-    route.fulfill(status=200, json={"medical_absence": "medical_absence"})
+    route.fulfill(status=200, json={"dates": ["2024-01-01", "2024-02-01", "2024-03-01"]})
 
 
 def handle_timesheet(route, response):
@@ -155,7 +246,7 @@ def handle_timesheet(route, response):
 
 
 def handle_vacation_closest(route, response):
-    route.fulfill(status=200, json={"vacation_closest": "vacation_closest"})
+    route.fulfill(status=200, json={"dates": ["2024-01-01", "2024-02-01", "2024-03-01"]})
 
 
 def handle_export(route, response):
@@ -192,6 +283,7 @@ def page_my() -> Page:
         context.route("**/api/admin-panel/employees/csv", handle_export)
         context.route("**/api/admin-panel/employees/one", handle_one)
         context.route("**/api/admin-panel/employees/two", handle_two)
+        context.route("**/api/admin-panel/employees/three", handle_3)
 
         context.route("**/api/admin-panel/employees/urltg", handle_urltg)
         context.route("**/api/admin-panel/employees/*/schedule/working-days", handle_schedule)
@@ -200,6 +292,8 @@ def page_my() -> Page:
         context.route("**/api/admin-panel/employees/*/reminder", handle_reminder)
         context.route("**/api/admin-panel/employees/*/timesheet/*/store", handle_store)
         context.route("**/api/admin-panel/employees/*/timesheet?search=*", handle_timesheet_search)
+
+        context.route("**/api/admin-panel/employees/*/update", handle_update)
 
         context.route("**/api/admin-panel/employees/*/absence", handle_absence)
         context.route("**/api/admin-panel/employees/*/absence/common", handle_absence_common)
