@@ -8,7 +8,7 @@ from apod.apod_calendar import ApodCalendar
 
 def test_pause(page_my: Page):
     page_my.goto("https://apod-dev-d.osora.ru/settings")
-    # page_my.pause()
+    page_my.pause()
 
 
 def test_choose_employee_statistics_display_date_period(page_my: Page):
@@ -122,7 +122,7 @@ def test_calendar_plan_workdays(page_my: Page):
     page_my.locator("li").filter(has_text="Рабочий график").locator("span").click()
 
     ApodCalendar(page_my.locator("div.react-calendar")).set_date('2020-07-22', '2020-07-24', '2020-07-26')
-
+    page_my.pause()
     page_my.get_by_text("Запланировать").click()
     expect(page_my.locator('[testid="alertTitle"]')).to_have_text("Успех")
     page_my.get_by_text("Принять").click()
@@ -523,3 +523,31 @@ def test_add_new_employee(page_my: Page):
     page.get_by_text("Принять").click()
 
     expect(page.get_by_role("heading")).to_contain_text(full_name)
+
+
+def test_employees_calendar_set_limits(page_my: Page):
+    # задать настройки для рабочего графика: ограничения
+    # широту и долготу как вводить? должны быть градусы, минуты, секунды,
+    # а тут только целые числа без ограничения.
+    # начало и окончание рабочего дня не отображаются
+    page_my.goto('https://apod-dev-d.osora.ru/settings')
+    page_my.get_by_text("Стандартный по РФ").click()
+    page_my.get_by_text("5-").click()
+    page_my.locator("div").filter(has_text=re.compile(r"^Начало рабочего дняВыберите время$")).locator("svg").click()
+    page_my.get_by_text("09:00").click()
+    page_my.locator("div").filter(has_text=re.compile(r"^Выберите время$")).locator("svg").click()
+    page_my.get_by_text("16:00").click()
+    page_my.locator("input[name=\"availableMinutesLate\"]").fill("20")
+    page_my.locator("input[name=\"monthMaxOverwork\"]").fill("12")
+    page_my.locator("input[name=\"dayMaxOverwork\"]").fill("2")
+    page_my.locator("input[name=\"vacationDays\"]").fill("14")
+    page_my.locator("input[name=\"vacationPeriod\"]").fill("5")
+    page_my.locator("input[name=\"maxAbsenceDays\"]").fill("3")
+    page_my.locator("input[name=\"nameundefined\"]").fill("set1")
+    page_my.locator("input[name=\"latitudeundefined\"]").fill("1000000")
+    page_my.locator("input[name=\"longitudeundefined\"]").fill("25")
+    page_my.locator("input[name=\"radiusundefined\"]").fill("1")
+    page_my.get_by_text("Сохранить").click()
+    page_my.get_by_text("Принять").click()
+    page_my.pause()
+
