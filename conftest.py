@@ -70,15 +70,26 @@ def handle_get_employees(route, response):
              "companyId": "company",
              "companyWorkplaces": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}],
              "fullName": "fullname one",
-             "paymentSystem": "hourly", "schedule": "2-2", "specialization": "spec", "urlTG": "urltg"},
-            {"id": "two", "companyId": "company",
+             "paymentSystem": "hourly",
+             "schedule": "2-2",
+             "specialization": "spec",
+             "urlTG": "urltg"},
+            {"id": "two",
+             "companyId": "company",
              "companyWorkplaces": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}],
              "fullName": "fullName two",
-             "paymentSystem": "hourly", "schedule": "2-2", "specialization": "spec", "urlTG": "urltg"},
-            {"id": "three", "companyId": "company",
+             "paymentSystem": "hourly",
+             "schedule": "2-2",
+             "specialization": "spec",
+             "urlTG": "urltg"},
+            {"id": "three",
+             "companyId": "company",
              "companyWorkplaces": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}],
              "fullName": "fullName three",
-             "paymentSystem": "hourly", "schedule": "2-2", "specialization": "spec", "urlTG": "urltg"}
+             "paymentSystem": "hourly",
+             "schedule": "customSchedule",
+             "specialization": "spec",
+             "urlTG": "urltg"}
         ]})
 
 
@@ -107,23 +118,23 @@ def handle_one(route, response):
         "id": "one",
         "username": "@sbdfkjsd1",
         "companyId": "company",
-        "employment_date": "2024-07-04",
-        "exit_date": "2024-07-18",
+        "employmentDate": "2024-07-04",
+        "exitDate": "2024-07-18",
         "workingDays": ["18.06.2024", "19.06.2024"],
-        "companyWorkplaces": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}],
+        "companyWorkplaces": [{"id": "aMU2s5Sf", "name": "name1", "latitude": 1, "longitude": 2, "radius": 3},
+                              {"id": "aMU2s6Sf", "name": "location1", "latitude": 1, "longitude": 2, "radius": 3}],
         "fullName": "full name above for user one",
-        # "timeSchedules": [{"id": "aMU2s5Sf", "label": "02:00-05:30", "selected": False}],
         "timeSchedule": [{"id": "aMU3s5Sf", "label": "02:00-05:30", "selected": False}],
         "schedule": ["2-2"],
         "schedules": ["2-2"],
         "roleId": "Admin",
         "roles": [{"id": 0, "title": "Role title 1"}],
-        "paymentSystem": "hourly",
-        # "schedule": "2-2",
+        "paymentSystem": None,
         "confirmGeo": True,
         "specialization": "spec",
         "information": ["item two", "item two", "item two", "item two", "item two"],
-        "locations": ["location1", "location2", "name1"],
+        "locations": [{"id": "aMU2s5Sf", "name": "name1"}],
+        "endAt": "11:11",
         "urlTG": "urltg"}})
 
 
@@ -132,20 +143,24 @@ def handle_two(route, response):
         "id": "two",
         "username": "@sbdfkjsd2",
         "companyId": "company",
+        "employmentDate": "2024-07-04",
+        "exitDate": "2024-07-18",
         "workingDays": ["18.06.2024", "19.06.2024"],
-        "companyWorkplaces": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}],
+        "companyWorkplaces": [{"id": "aMU1s6Sf", "name": "name1", "latitude": 1, "longitude": 2, "radius": 3},
+                              {"id": "aMU2s6Sf", "name": "location1", "latitude": 2, "longitude": 2, "radius": 3},
+                              {"id": "aMU3s6Sf", "name": "location2", "latitude": 3, "longitude": 2, "radius": 3}],
         "fullName": "fntwo",
-        # "timeSchedules": [{"id": "aMU2s5Sf", "label": "02:00-05:30", "selected": False}],
         "timeSchedule": [{"id": "aMU3s5Sf", "label": "02:00-05:30", "selected": False}],
         "schedule": ["2-2"],
         "schedules": ["2-2"],
         "roleId": 2,
         "roles": [{"id": 1, "title": "title1"}],
-        "paymentSystem": "hourly",
-        # "schedule": "2-2",
+        "paymentSystem": "monthly",
+        "confirmGeo": False,
         "specialization": "spec",
         "information": ["item one", "item two"],
-        "locations": ["location1", "location2", "name1"],
+        "locations": [],
+        "endAt": "12:22",
         "urlTG": "urltg"}})
 
 
@@ -153,23 +168,36 @@ def handle_3(route, response):
     route.fulfill(status=200, json={"employee": {
         "id": "three",
         "username": "@sbdfkjsd3",
-        "companyId": "company",
-        "workingDays": ["18.06.2024", "19.06.2024"],
-        "companyWorkplaces": [{"name": "name1", "latitude": 1, "longitude": 2, "radius": 3}],
+        # "companyId": "company",
+        "employmentDate": "2024-07-04",
+        "exitDate": "2024-07-18",
+        # "workingDays": ["18.06.2024", "19.06.2024"],
+        "companyWorkplaces": [
+            {"id": "100", "name": "name1", "title": "you", "latitude": 1, "longitude": 2, "radius": 3},
+            {"id": "200", "name": "location1", "latitude": 2, "longitude": 2, "radius": 3},
+            {"id": "300", "name": "location2", "latitude": 3, "longitude": 2, "radius": 3}],
         "fullName": "full name three above",
-        # "timeSchedules": [{"id": "aMU2s5Sf", "label": "02:00-05:30", "selected": False}],
-        "timeSchedule": [{"id": "aMU3s5Sf", "label": "02:00-05:30", "selected": False}],
-        "schedule": ["2-2"],
-        "schedules": ["2-2"],
+
+        "schedule": [
+            {"id": 1, "label": "08:00-10:00"},
+            {"id": 2, "label": "13:00-15:00"},
+            {"id": 3, "label": "16:00-18:00"}
+        ],
+
         "roleId": 3,
-        "roles": [{"id": 0, "title": "title2"}, {"id": 1, "title": "title2"}, {"id": 2, "title": "title2"},
-                  {"id": 3, "title": "title2"}],
-        "paymentSystem": "hourly",
-        # "schedule": "2-2",
+        "roles": [{"id": 0, "title": "title0"},
+                  {"id": 1, "title": "title1"},
+                  {"id": 2, "title": "title2"},
+                  {"id": 3, "title": "title3"}],
+
+        # "paymentSystem": "hourly",
         "specialization": "spec three above",
         "information": ["item one", "item two", "item two", "item two", "item two", "item two", "item two", "item two"],
-        "locations": ["location1", "location2", "name1"],
-        "urlTG": "urltg"}})
+        "locations": [{"id": "100", "name": "name1"}, {"id": "200", "name": "location1"}],
+        "confirmGeo": True,
+        "endAt": "12:33",
+        # "urlTG": "urltg"
+    }})
 
 
 def handle_archive(route, response):
@@ -239,10 +267,15 @@ def handle_absence_medical(route, response):
 
 def handle_timesheet(route, response):
     route.fulfill(status=200, json={"timesheet": [
-        {"id": "one", "date": "2024-01-01", "status": "Прогул", "endAt": "04:58", "comment": "comment1",
-         "startAt": "03:57"},
-        {"id": "two", "date": "2024-01-02", "status": "Отгул", "endAt": "04:58", "comment": "comment2",
-         "startAt": "03:57"}]})
+        {"id": "on0", "date": "2024-01-01", "status": "Прогул", "startAt": "03:57", "endAt": "03:58", "comment": "c1"},
+        {"id": "on1", "date": "2024-01-01", "status": "Отгул", "startAt": "04:57", "endAt": "04:58", "comment": "c2"},
+        {"id": "on2", "date": "2024-01-01", "status": "Больничный", "startAt": "05:57", "endAt": "06:00", "comment": "c3"},
+        {"id": "on3", "date": "2024-01-01", "status": "На pаботе", "startAt": "07:57", "endAt": "08:58", "comment": "c4"},
+        {"id": "on3", "date": "2025-01-01", "status": "На pаботе", "startAt": "07:57", "endAt": "08:58",
+         "comment": "c5"},
+        {"id": "on3", "date": "2026-01-01", "status": "На pаботе", "startAt": "07:57", "endAt": "08:58",
+         "comment": "c6"},
+    ]})
 
 
 def handle_vacation_closest(route, response):
