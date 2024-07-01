@@ -251,7 +251,7 @@ def test_main_settings(page_my: Page):
 
 def test_employees_one_card(page_my: Page):
     page = page_my
-    page.goto('https://apod-dev-d.osora.ru/employees/three')
+    page.goto('https://apod-dev-d.osora.ru/employees/three/calendar')
     page.on("request", interception)
     page.pause()
     #
