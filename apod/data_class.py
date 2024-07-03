@@ -1,14 +1,28 @@
+import json
+import os
 from dataclasses import dataclass
 from typing import NamedTuple
 
 
+def save_json(data, filename: str):
+    with open(filename, 'w') as file:
+        json.dump(data, file)
+    assert os.path.exists(filename), "File was not created successfully"
+    return filename
+
+
+def read_json(filename) -> dict:
+    with open(filename, 'r') as f:
+        data = json.load(f)
+    return data
+
+
 @dataclass
 class Settings:
-    availableMinutesLate: int
+    availableMinutesLate: dict
     workingDays: list
     weekendsDays: list
     locations: [dict]
-    weekendsType: str
     schedule: str
     weekendsType: str
     timeSchedules: [dict]
@@ -42,6 +56,24 @@ print(coordinates.latitude)
 print(coordinates.radius)
 
 "-------------------------------------------------------------------"
+# 2-й Вариант записи
+"""class Coordinates2, данные считываются с json файла , строка  "locations": """
+
+
+class Coordinates2(NamedTuple):
+    location = read_json('hand_get_settings.json')['locations']
+
+
+def locations() -> Coordinates2:
+    """Returns coordinates"""
+    return Coordinates2.location
+
+
+coordinates = locations().location
+print(coordinates.longitude)
+print(coordinates.latitude)
+print(coordinates.radius)
+"-----------------------------------------------------------------------------------------------------"
 
 
 def available_minutes_late() -> dict[str, int]:
@@ -55,7 +87,7 @@ print(available_minutes_late())
 
 
 # def working_days() -> list:
-
+"=================================Не лучший вариант ==============================================================="
 @dataclass
 class Settings2:
     availableMinutesLate: int = 5
@@ -83,6 +115,6 @@ class Settings2:
     # deletedLocations: list = []  # пустой лист подсвечен ошибкой
     # updatedLocations: list = []
     # createdLocations: list = []
-#
-#
+
+
 print(Settings2)
