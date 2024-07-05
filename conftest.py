@@ -1,7 +1,34 @@
-import json
-
+import os
 import pytest
+import pytest_asyncio
+from dotenv import load_dotenv
+from telethon import TelegramClient
+from telethon.sessions import StringSession
 from playwright.sync_api import sync_playwright, Page, Route, Request
+
+
+load_dotenv()
+
+api_id = os.getenv("TELEGRAM_APP_ID")
+api_hash = os.getenv("TELEGRAM_APP_HASH")
+telethon_session = os.getenv("TELETHON_SESSION")
+
+@pytest_asyncio.fixture(scope="session")
+async def client() -> TelegramClient:
+    """Создание клиента телеграмма 
+
+    :return: client connection instance
+    :rtype: TelegramClient
+    """
+    client = TelegramClient(
+        StringSession(telethon_session), api_id, api_hash,
+        sequential_updates=True
+    )
+
+    yield client
+
+    await client.disconnect()
+    await client.disconnected
 
 
 @pytest.fixture(scope="session")
