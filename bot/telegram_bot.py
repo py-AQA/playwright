@@ -5,7 +5,7 @@ from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
 ##### Здесь находиться общие команды которые обрабатывает бот  ####
 ##### Можно добавить свои обработчики команд                   ####
 
-bot_token = '7209704352:AAEaPX52DZ3di2o8DUVuoTYqE_omvfHXxlU'
+bot_token = 'your_bot_token'
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text='Hi')
