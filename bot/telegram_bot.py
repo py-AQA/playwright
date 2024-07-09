@@ -1,14 +1,22 @@
+import os
+
+from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder,  CommandHandler, CallbackQueryHandler, CallbackContext
 
-bot_token = 'your token'
+load_dotenv()
+
+bot_token = os.getenv("TOKEN")
+
 
 async def start(update: Update, context: CallbackContext):
     await context.bot.send_message(chat_id=update.effective_chat.id, text='Hi')
 
+
 async def caps(update: Update, context: CallbackContext):
     text_caps = ' '.join(context.args).upper()
     await context.bot.send_message(chat_id=update.effective_chat.id, text=text_caps)
+
 
 async def show_menu(update: Update, context: CallbackContext):
     keyboard = [
@@ -18,6 +26,7 @@ async def show_menu(update: Update, context: CallbackContext):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите пункт меню:', reply_markup=reply_markup)
+
 
 async def help_command(update: Update, context: CallbackContext):
     help_message = """
@@ -34,23 +43,30 @@ async def help_command(update: Update, context: CallbackContext):
     """
     await context.bot.send_message(chat_id=update.effective_chat.id, text=help_message)
 
+
 async def content(update: Update, context: CallbackContext):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="We have various playlists and articles available!")
+
 
 async def Python(update: Update, context: CallbackContext):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="Tutorial link : https://www.youtube.com/watch?v=KdZ4HF1SrFs")
 
+
 async def SQL(update: Update, context: CallbackContext):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="Tutorial link : https://www.youtube.com/watch?v=sLwiFGAOMK4&list=PLqj7-hRTFl_oweCD2cFQYdJDmD5bwEhb9")
+
 
 async def Java(update: Update, context: CallbackContext):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="Tutorial link : https://www.youtube.com/watch?v=eWk4wrks7qk")
 
+
 async def Skillup(update: Update, context: CallbackContext):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="Tutorial link : https://stepik.org/lesson/984730/step/2?unit=992009")
 
+
 async def contact(update: Update, context: CallbackContext):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="You can contact on the official mail id")
+
 
 async def handle_message(update: Update, context: CallbackContext):
     await context.bot.send_message(chat_id=update.effective_chat.id, text=f"You said {update.message.text}, use the commands using /")

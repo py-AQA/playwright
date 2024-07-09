@@ -2,16 +2,30 @@ import os
 import pytest
 import pytest_asyncio
 from dotenv import load_dotenv
+from pytest_asyncio import fixture
 from telethon import TelegramClient
 from telethon.sessions import StringSession
-from playwright.sync_api import sync_playwright, Page, Route, Request
+from playwright.sync_api import sync_playwright, Page, Request
+from bot.redis_controller import RedisController
 
 
 load_dotenv()
 
-api_id = os.getenv("TELEGRAM_APP_ID")
-api_hash = os.getenv("TELEGRAM_APP_HASH")
-telethon_session = os.getenv("TELETHON_SESSION")
+api_id = os.getenv("APP_ID")
+api_hash = os.getenv("APP_HASH")
+telethon_session = os.getenv("SESSION_NAME")
+
+
+@fixture(scope='function')
+def tester_bot():
+    redis = RedisController(
+        host=os.getenv("REDIS_HOST"),
+        port=int(os.getenv("REDIS_PORT"))
+    )
+    redis.clear_all()
+    yield redis
+    redis.clear_all()
+
 
 @pytest_asyncio.fixture(scope="session")
 async def client() -> TelegramClient:
