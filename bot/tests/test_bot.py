@@ -1,3 +1,5 @@
+import time
+
 import pytest
 from telethon import TelegramClient
 
@@ -16,4 +18,8 @@ async def test_bot_say_hi(client: TelegramClient):
 
         assert resp.text == "Hi"
 
-    
+
+def test_example(tester_bot):
+    tester_bot.send_message()
+    time.sleep(2)
+    assert tester_bot.get_last_message() == "Hi"
