@@ -6,8 +6,8 @@ from pytest_asyncio import fixture
 from telethon import TelegramClient
 from telethon.sessions import StringSession
 from playwright.sync_api import sync_playwright, Page, Request
-from bot.redis_controller import RedisController
 
+from bot.redis_server import RedisController
 
 load_dotenv()
 
