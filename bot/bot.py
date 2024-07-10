@@ -2,7 +2,7 @@ import os
 import asyncio
 import logging
 
-from redis.client import Redis
+from redis_server import Redis
 from telethon import TelegramClient, events
 from telethon.errors import FloodWaitError
 from dotenv import load_dotenv
