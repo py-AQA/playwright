@@ -1,5 +1,4 @@
 import pytest
-
 from telethon import TelegramClient
 
 
