@@ -280,6 +280,7 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
 config.ini
 client_with_config.session
 *.session
