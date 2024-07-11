@@ -80,6 +80,7 @@ def test_calendar_plan_vacation(page_my: Page):
 
     page_my.get_by_text("Запланировать").click()
     expect(page_my.locator('[testid="alertTitle"]')).to_have_text("Успех")
+    page_my.pause()
     page_my.get_by_text("Принять").click()
 
 
@@ -91,7 +92,7 @@ def test_calendar_plan_medical(page_my: Page):
     page_my.locator("li").filter(has_text="Больничный").locator("span").click()
 
     ApodCalendar(page_my.locator("div.react-calendar")).set_period('2019-07-07', '2020-06-17')
-    # page_my.pause()
+    page_my.pause()
 
     page_my.get_by_text("Запланировать").click()
     expect(page_my.locator('[testid="alertTitle"]')).to_have_text("Успех")
@@ -120,7 +121,7 @@ def test_calendar_plan_workdays(page_my: Page):
     page_my.locator("li").filter(has_text="Рабочий график").locator("span").click()
 
     ApodCalendar(page_my.locator("div.react-calendar")).set_date('2020-07-22', '2020-07-24', '2020-07-26')
-
+    page_my.pause()
     page_my.get_by_text("Запланировать").click()
     expect(page_my.locator('[testid="alertTitle"]')).to_have_text("Успех")
     page_my.get_by_text("Принять").click()
@@ -202,7 +203,7 @@ def test_reminder(page_my: Page):
     page.goto("https://apod-dev-d.osora.ru/employees/one/timesheet")
     page.get_by_text("Напоминания").click()
     page.get_by_text("+ добавить напоминание").click()
-
+    page.pause()
     page.get_by_placeholder("Комментарий").last.click()
     page.get_by_placeholder("Комментарий").last.fill("time")
 
@@ -250,24 +251,29 @@ def test_main_settings(page_my: Page):
 
 def test_employees_one_card(page_my: Page):
     page = page_my
-    page.goto('https://apod-dev-d.osora.ru/employees/one')
-    page.get_by_label("Close").click()
-
-    page.get_by_placeholder("@tgnickname").click()
-    page.get_by_placeholder("@tgnickname").fill("@Grom-Zadira")
-    page.get_by_placeholder("ФИО").fill("За орду!")
-    page.get_by_placeholder("Должность").fill("Нужно больше Золота!")
-    page.get_by_placeholder("Дата трудоустройства").fill("2022-02-23")
-    page.get_by_placeholder("Дата выхода").fill("2024-06-23")
-    page.locator('[placeholder="Время окончания смены"]').click()
-    # page.locator('div:nth-child(7) > div:nth-child(2) > input').type("1745")
-    page.locator('[name="endAt"]').type("1745")
-    page.get_by_role("link", name="Сохранить").click()
+    page.goto('https://apod-dev-d.osora.ru/employees/three/calendar')
+    page.on("request", interception)
+    page.pause()
+    #
+    # page.get_by_label("Close").click()
+    #
+    # page.get_by_placeholder("@tgnickname").click()
+    # page.get_by_placeholder("@tgnickname").fill("@Grom-Zadira")
+    # page.get_by_placeholder("ФИО").fill("За орду!")
+    # page.get_by_placeholder("Должность").fill("Нужно больше Золота!")
+    # page.get_by_placeholder("Дата трудоустройства").fill("2022-02-23")
+    # page.get_by_placeholder("Дата выхода").fill("2024-06-23")
+    # page.locator('[placeholder="Время окончания смены"]').click()
+    # # page.locator('div:nth-child(7) > div:nth-child(2) > input').type("1745")
+    # page.locator('[name="endAt"]').type("1745")
+    # page.get_by_role("link", name="Сохранить").click()
     # page.pause()
 
 
 def interception(request: Request):
-    print(request.url, request.post_data)
+
+    print(request.method, request.url, request.post_data)
+
 
 
 def test_settings(page_my: Page):
@@ -321,6 +327,7 @@ def test_admin_check_monthly(page_my: Page):
     page = page_my
     page.goto('https://apod-dev-d.osora.ru/employees/one/paymentSystem')
     page.on("request", method)
+
     page.locator("input[name=\"salary\"]").fill("10000")
     page.get_by_role("spinbutton").fill("10000")
     page.locator("input[name=\"comment\"]").fill("Премия")
@@ -377,3 +384,178 @@ def test_admin_check_hourly_new_employee(page_my: Page):
     page.get_by_text("Добавить").click()
 
     page.get_by_text("Принять").click()
+
+
+
+def test_test(page_my: Page):
+    page_my.goto("https://apod-dev-d.osora.ru/employees/one/calendar")
+    page_my.pause()
+    page = page_my
+    page.locator("div").filter(has_text=re.compile(r"^Не выбрано$")).locator("svg").click()
+    page.locator("li").filter(has_text="Рабочий график").locator("span").click()
+    page.get_by_text("2-").click()
+    page.get_by_text("-1").click()
+    page.get_by_text("индивидуально").click()
+    page.get_by_text("индивидуально", exact=True).click()
+    page.get_by_role("button", name="›").click()
+    page.get_by_role("button", name="10 июля 2024 г").click()
+    page.get_by_role("button", name="11 июля 2024 г").click()
+    page.get_by_role("button", name="12 июля 2024 г").click()
+    page.locator(".h-1\\.5").first.click()
+    page.get_by_text("Запланировать").click()
+    expect(page.locator('[testid="alertTitle"]')).to_have_text("Успех")
+    page.get_by_text("Принять").click()
+
+
+def test_add_four_ind_days_LK(page_my: Page):
+    page_my.goto("https://apod-dev-d.osora.ru/employees/one/calendar")
+    page_my.pause()
+    page = page_my
+    page.locator("div").filter(has_text=re.compile(r"^Не выбрано$")).click()
+    page.locator("li").filter(has_text="Отпуск").locator("span").click()
+    page.get_by_role("button", name="›").click()
+    page.get_by_role("button", name="›").click()
+    page.get_by_role("button", name="6 августа 2024 г.", exact=True).click()
+    page.get_by_role("button", name="7 августа 2024 г.", exact=True).click()
+    page.get_by_role("button", name="8 августа 2024 г.", exact=True).click()
+    page.get_by_role("button", name="9 августа 2024 г.", exact=True).click()
+    page.get_by_text("Запланировать").click()
+    expect(page.locator('[testid="alertTitle"]')).to_have_text("Успех")
+    page.get_by_text("Принять").click()
+    # page.get_by_label("Close").click()
+
+
+def test_add_employee_with_5_2_LK(page_my: Page):
+    page_my.goto("https://apod-dev-d.osora.ru/employees/one/calendar")
+    page_my.pause()
+    page = page_my
+    page.locator("div").filter(has_text=re.compile(r"^импортэкспортfnonespecfntwospec$")).get_by_role("link").click()
+    page.locator("input[name=\"username\"]").click()
+    page.locator("input[name=\"username\"]").fill("My_Nickname")
+    page.locator("input[name=\"fullName\"]").click()
+    page.locator("input[name=\"fullName\"]").fill("Fname Lname")
+    page.locator("input[name=\"specialization\"]").click()
+    page.locator("input[name=\"specialization\"]").fill("IT")
+    page.get_by_text("5-").click()
+    page.locator("input[name=\"employmentDate\"]").fill("2024-07-10")
+    page.locator("input[name=\"exitDate\"]").fill("2024-07-11")
+    page.get_by_text("Добавить").click()
+    expect(page.locator('[testid="alertTitle"]')).to_have_text("Успех")
+    page.get_by_text("Принять").click()
+
+
+def test_add_settings_Ind_employee_LK(page_my: Page):
+    page_my.goto("https://apod-dev-d.osora.ru/employees/one/calendar")
+    page_my.pause()
+    page = page_my
+    page.get_by_role("link", name="Настройки").click()
+    page.get_by_text("Индивидуальный").click()
+    page.get_by_role("button", name="›").click()
+    page.get_by_role("button", name="9 июля 2024 г.", exact=True).click()
+    page.get_by_role("button", name="11 июля 2024 г").click()
+    page.get_by_role("button", name="12 июля 2024 г").click()
+    page.get_by_text("Сохранить").nth(1).click()
+    page.locator("div").filter(has_text=re.compile(r"^Начало рабочего дняВыберите время$")).locator("svg").click()
+    page.get_by_text("08:00").click()
+    page.locator("div").filter(has_text=re.compile(r"^Выберите время$")).locator("svg").click()
+    page.get_by_text("17:00").click()
+    page.locator("input[name=\"name\"]").click()
+    page.locator("input[name=\"name\"]").fill("LK")
+    page.locator("input[name=\"latitude\"]").click()
+    page.locator("input[name=\"latitude\"]").fill("2")
+    page.locator("input[name=\"longitude\"]").click()
+    page.locator("input[name=\"longitude\"]").fill("4")
+    page.locator("input[name=\"radius\"]").click()
+    page.locator("input[name=\"radius\"]").fill("5")
+    page.get_by_text("Сохранить").click()
+    expect(page.locator('[testid="alertTitle"]')).to_have_text("Успех")
+    page.get_by_text("Принять").click()
+
+
+def test_redirect_to_employee_info(page_my: Page):
+    """ Переход на страницу работника с информацией"""
+    page = page_my
+
+    page.goto("https://apod-dev-d.osora.ru/employees/one")
+    page.get_by_label("Close").click()
+
+    # Opens new page with employee info
+    with page.expect_popup() as new_page:
+        page.locator("ul").filter(has_text="C3").get_by_role("link").first.click()
+    page1 = new_page.value
+    page1.get_by_label("Close").click()
+
+    expect(page1).to_have_url(re.compile('https://apod-dev-d.osora.ru/employees/urltg'))
+    expect(page1.get_by_text("Информация по сотруднику")).to_be_visible()
+    page.pause()
+
+
+def test_add_new_employee(page_my: Page):
+    """ Проверка создания нового сотрудника в системе (mocking) """
+    page = page_my
+
+    # Monitoring request and response packets
+    page.on("request", lambda req: print(">>>: " + req.method, req.post_data))
+    page.on("response", lambda res: print(" <<<: " + str(res.status), res.body()))
+
+    page.goto("https://apod-dev-d.osora.ru/employees/newEmployee")
+
+    # Fills forms of new employee
+    page.locator("input[name='username']").fill("@vladi")
+    page.locator("input[name='fullName']").fill("Le Alfonse")
+    page.locator("input[name='specialization']").fill("General")
+    page.locator("input[name='employmentDate']").fill("2024-06-29")
+
+    # Keeps value of Name and Specialization fields
+    full_name = page.locator("input[name='fullName']").input_value()
+    spec = page.locator("input[name='specialization']").input_value()
+
+    # Mock API request with data from a form
+    page.route(
+        "**/api/admin-panel/employees",
+        lambda route: route.fulfill(status=200, json={"employees": [
+            {
+                "id": "777",
+                "companyId": "89",
+                "companyWorkplaces": 'null',
+                "fullName": full_name,
+                "specialization": spec,
+                "urlTG": "@vlad"}]}))
+
+    page.get_by_text("Добавить").click()
+
+    expect(page.locator("[id='__next']")).to_contain_text("Сотрудник добавлен")
+
+    page.get_by_text("Принять").click()
+
+    expect(page.get_by_role("heading")).to_contain_text(full_name)
+
+    page.pause()
+
+
+def test_employees_calendar_set_limits(page_my: Page):
+    # задать настройки для рабочего графика: ограничения
+    # широту и долготу как вводить? должны быть градусы, минуты, секунды,
+    # а тут только целые числа без ограничения.
+    # начало и окончание рабочего дня не отображаются
+    page_my.goto('https://apod-dev-d.osora.ru/settings')
+    page_my.get_by_text("Стандартный по РФ").click()
+    page_my.get_by_text("5-").click()
+    page_my.locator("div").filter(has_text=re.compile(r"^Начало рабочего дняВыберите время$")).locator("svg").click()
+    page_my.get_by_text("09:00").click()
+    page_my.locator("div").filter(has_text=re.compile(r"^Выберите время$")).locator("svg").click()
+    page_my.get_by_text("16:00").click()
+    page_my.locator("input[name=\"availableMinutesLate\"]").fill("20")
+    page_my.locator("input[name=\"monthMaxOverwork\"]").fill("12")
+    page_my.locator("input[name=\"dayMaxOverwork\"]").fill("2")
+    page_my.locator("input[name=\"vacationDays\"]").fill("14")
+    page_my.locator("input[name=\"vacationPeriod\"]").fill("5")
+    page_my.locator("input[name=\"maxAbsenceDays\"]").fill("3")
+    page_my.locator("input[name=\"nameundefined\"]").fill("set1")
+    page_my.locator("input[name=\"latitudeundefined\"]").fill("1000000")
+    page_my.locator("input[name=\"longitudeundefined\"]").fill("25")
+    page_my.locator("input[name=\"radiusundefined\"]").fill("1")
+    page_my.get_by_text("Сохранить").click()
+    page_my.get_by_text("Принять").click()
+    page_my.pause()
+
