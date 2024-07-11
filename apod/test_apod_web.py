@@ -271,7 +271,9 @@ def test_employees_one_card(page_my: Page):
 
 
 def interception(request: Request):
+
     print(request.method, request.url, request.post_data)
+
 
 
 def test_settings(page_my: Page):
@@ -293,6 +295,7 @@ def test_settings(page_my: Page):
     page.get_by_text("Индивидуальный").click()
     page.locator('[for="customWeekends"]').type("2022-02-23")
     page.locator('[for="customWeekends"]').type("11 июня 2020 г.")
+
 
 
 def handle_work_calendar(request: Request):
@@ -324,7 +327,7 @@ def test_admin_check_monthly(page_my: Page):
     page = page_my
     page.goto('https://apod-dev-d.osora.ru/employees/one/paymentSystem')
     page.on("request", method)
-    page.pause()
+
     page.locator("input[name=\"salary\"]").fill("10000")
     page.get_by_role("spinbutton").fill("10000")
     page.locator("input[name=\"comment\"]").fill("Премия")
@@ -366,7 +369,7 @@ def test_admin_check_hourly_new_employee(page_my: Page):
     page = page_my
     page.goto('https://apod-dev-d.osora.ru/employees/newEmployee')
     page.on("request", method)
-    page.pause()
+
     page.locator("input[name=\"username\"]").fill("darius_25")
     page.get_by_text("Почасовая").click()
 
@@ -381,6 +384,7 @@ def test_admin_check_hourly_new_employee(page_my: Page):
     page.get_by_text("Добавить").click()
 
     page.get_by_text("Принять").click()
+
 
 
 def test_test(page_my: Page):
@@ -554,3 +558,4 @@ def test_employees_calendar_set_limits(page_my: Page):
     page_my.get_by_text("Сохранить").click()
     page_my.get_by_text("Принять").click()
     page_my.pause()
+
