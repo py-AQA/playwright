@@ -1,20 +1,21 @@
 import asyncio
 import os
-import time
+from typing import Final
 
-import pytest
 from dotenv import load_dotenv
 from pytest import mark
 from telethon import TelegramClient
 from telethon.sessions import StringSession
 from telethon.tl.custom.message import Message
 
+
+
 load_dotenv()
 
 api_id = os.getenv("APP_ID")
 api_hash = os.getenv("APP_HASH")
 telethon_session = os.getenv("SESSION_NAME")
-
+BOT_USERNAME: Final = '@gromamicon_bot'
 
 # нужен если убрать мой конфтест файл, настройки из глобально-группового конфтеста не передаются
 # def client() -> TelegramClient:
@@ -32,8 +33,8 @@ telethon_session = os.getenv("SESSION_NAME")
 
 def test_bot_say_hi(client: TelegramClient):
     """ Посылаем сообщение нашему боту и проверяем что он отвечает нам """
-    client = TelegramClient(StringSession(telethon_session), int(api_id), api_hash)
-    client.connect()
+    # client = TelegramClient(StringSession(telethon_session), int(api_id), api_hash)
+    # client.connect()
 
     # Используется conversation из telethon для того что бы следить за диалогом с ботом
     # with client.conversation("@gromamicon_bot", timeout=5) as conv:
@@ -46,15 +47,38 @@ def test_bot_say_hi(client: TelegramClient):
 
 
 @mark.asyncio
-async def test_bot_send_message(client: TelegramClient):
-    with client.conversation("@gromamicon_bot", timeout=5) as conv:
-        await client.connect()
-        await conv.send_message("/start")
-        resp: Message = await conv.get_response()
-        # resp = await conv.get_response()
-        print(resp)
+async def test_bot_send_message(client):
+
+    async with client.conversation(BOT_USERNAME, timeout=5) as conv:
+        conv.send_message(BOT_USERNAME, "/start")
+
+asyncio.run(test_bot_send_message())
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # await client.conversation("@gromamicon_bot", timeout=5).send_message("/start")
+    #     resp: Message = await conv.get_response()
+    #     # resp = await conv.get_response()
+    #     print(resp)
         # assert resp.text == "Hi"
 
+    # client.disconnect()
+    # client.disconnected
 
 
+# async with client:
+#     # Replace 'BOT_USERNAME' with the actual username of your bot
+#     async with client.conversation('BOT_USERNAME', timeout=50) as conv:
+#         await conv.send_message("/start")
 
+# asyncio.run(send_message_to_bot())
