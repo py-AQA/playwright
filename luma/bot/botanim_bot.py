@@ -7,10 +7,8 @@ from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, Applicat
 
 settings: dict = dotenv_values(".env")
 bot_token = settings.get("TOKEN")
-print(bot_token)
-
-bot_token = settings.get("TOKEN")
 BOT_USERNAME: Final = '@gromamicon_bot'
+print(bot_token)
 
 # load_dotenv()
 # TELEGRAM_BOT_TOKEN = os.getenv("TOKEN")
@@ -19,7 +17,7 @@ BOT_USERNAME: Final = '@gromamicon_bot'
 
 
 async def start(update, context):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="Hello! This is a start message.")
+    # await context.bot.send_message(chat_id=update.effective_chat.id, text="Hello! This is a start message.")
     await show_description(update, context)
     await show_menu(update, context)
 
