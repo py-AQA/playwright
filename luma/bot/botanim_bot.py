@@ -28,13 +28,13 @@ async def show_description(update, context):
     image_url = ('https://pohcdn.com/guide/sites/default/files/styles/paragraph__hero_banner__hb_image__1280bp/public'
                  '/hero_banner/Niagara-falls.jpg')
     caption = 'Hi! Do you like this picture?'
-    await context.bot.send_photo(chat_id=update.effective_chat.id, photo=image_url, caption=caption)
+    await context.bot.send_photo(chat_id=update.effective_chat.id, photo=image_url, caption=caption, reply_markup=ikb)
 
 
-# ikb = InlineKeyboardMarkup(inline_keyboard=[
-#     [InlineKeyboardButton('❤️', callback_data='like'), InlineKeyboardButton('👎', callback_data='dislike')],
-# ])
-#
+ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton('❤️', callback_data='like'), InlineKeyboardButton('👎', callback_data='dislike')],
+])
+
 
 async def show_menu(update, context):
     keyboard = [
@@ -51,6 +51,16 @@ async def button_click(update, context):
     query = update.callback_query
     button = query.data
     await query.answer()
+
+    if button == 'like':
+
+        info_text = "You like this photo "
+        await context.bot.send_message(chat_id=query.message.chat_id, text=info_text)
+
+    elif button == 'dislike':
+
+        info_text = "You dont like this photo "
+        await context.bot.send_message(chat_id=query.message.chat_id, text=info_text)
 
     if button == 'place_info':
         # Отправка информации about place
