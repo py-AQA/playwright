@@ -2,24 +2,16 @@
 from typing import Final
 
 from dotenv import dotenv_values
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, ApplicationBuilder
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import CommandHandler, CallbackQueryHandler, ApplicationBuilder, CallbackContext
 
 settings: dict = dotenv_values(".env")
 bot_token = settings.get("TOKEN")
-print(bot_token)
-
-bot_token = settings.get("TOKEN")
 BOT_USERNAME: Final = '@gromamicon_bot'
-
-# load_dotenv()
-# TELEGRAM_BOT_TOKEN = os.getenv("TOKEN")
-# print(TELEGRAM_BOT_TOKEN)
-# bot = Bot(telegram_bot_token)
+print(bot_token)
 
 
 async def start(update, context):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="Hello! This is a start message.")
     await show_description(update, context)
     await show_menu(update, context)
 
@@ -27,32 +19,39 @@ async def start(update, context):
 async def show_description(update, context):
     image_url = ('https://pohcdn.com/guide/sites/default/files/styles/paragraph__hero_banner__hb_image__1280bp/public'
                  '/hero_banner/Niagara-falls.jpg')
-    caption = 'Hi! Do you like this picture?'
-    await context.bot.send_photo(chat_id=update.effective_chat.id, photo=image_url, caption=caption)
+    caption = 'Hi! Do you like this picture?',
 
+    ikb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton('❤️', callback_data='like'), InlineKeyboardButton('👎', callback_data='dislike')],
+    ])
 
-# ikb = InlineKeyboardMarkup(inline_keyboard=[
-#     [InlineKeyboardButton('❤️', callback_data='like'), InlineKeyboardButton('👎', callback_data='dislike')],
-# ])
-#
+    await context.bot.send_photo(chat_id=update.effective_chat.id, photo=image_url, caption=caption, reply_markup=ikb)
+
 
 async def show_menu(update, context):
     keyboard = [
-        [InlineKeyboardButton("Information about place", callback_data='place_info')],  # ABOUT COLLEGE
-        [InlineKeyboardButton("Visit this place", callback_data='visit')],  # practica
+        [InlineKeyboardButton("Information about place", callback_data='place_info')],
+        [InlineKeyboardButton("Visit this place", callback_data='visit')],
         [InlineKeyboardButton("more information", callback_data='contact_info')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     await context.bot.send_message(chat_id=update.effective_chat.id, text='Select part menu', reply_markup=reply_markup)
 
 
-# Обработчик нажатия на кнопку
 async def button_click(update, context):
     query = update.callback_query
     button = query.data
     await query.answer()
 
-    if button == 'place_info':
+    if button == 'like':
+        info_text = "You like this photo"
+        await context.bot.send_message(chat_id=query.message.chat_id, text=info_text)
+
+    elif button == 'dislike':
+        info_text = "You dont like this photo"
+        await context.bot.send_message(chat_id=query.message.chat_id, text=info_text)
+
+    elif button == 'place_info':
         # Отправка информации about place
         info_text = '''Несмотря на то, что Ниагарский водопад находится примерно в 130 км от города Торонто, 
         он считается его главной природной достопримечательностью. Ниагара является одним из самых удивительных и 
@@ -81,13 +80,25 @@ async def button_click(update, context):
     19801 USA
         """
         await context.bot.send_message(chat_id=query.message.chat_id, text=info_text)
-        # await show_menu(update, context)
+
+
+async def help_command(update: Update, context: CallbackContext):
+    help_message = """
+    The following commands are available:
+
+    /start -> Hi! Do you like this picture?
+    /help -> Command list
+    /caps -> Upper message
+    """
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=help_message)
 
 
 def main():
     application = ApplicationBuilder().token(bot_token).build()
     application.add_handler(CommandHandler('start', start))
+    application.add_handler(CommandHandler('desc', show_description))
     application.add_handler(CommandHandler('menu', show_menu))
+    application.add_handler(CommandHandler('help', help_command))
     application.add_handler(CallbackQueryHandler(button_click))
 
     application.run_polling()
