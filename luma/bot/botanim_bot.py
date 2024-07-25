@@ -1,12 +1,16 @@
-# from dotenv import load_dotenv
+import os
 from typing import Final
 
-from dotenv import dotenv_values
+from dotenv import load_dotenv
+# from dotenv import dotenv_values
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import CommandHandler, CallbackQueryHandler, ApplicationBuilder, CallbackContext
 
-settings: dict = dotenv_values(".env")
-bot_token = settings.get("TOKEN")
+# settings: dict = dotenv_values(".env")
+# bot_token = settings.get("TOKEN")
+
+load_dotenv()
+bot_token = os.getenv("TOKEN")
 BOT_USERNAME: Final = '@gromamicon_bot'
 print(bot_token)
 
@@ -19,7 +23,7 @@ async def start(update, context):
 async def show_description(update, context):
     image_url = ('https://pohcdn.com/guide/sites/default/files/styles/paragraph__hero_banner__hb_image__1280bp/public'
                  '/hero_banner/Niagara-falls.jpg')
-    caption = 'Hi! Do you like this picture?',
+    caption = 'Hi! Do you like this picture?'
 
     ikb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton('❤️', callback_data='like'), InlineKeyboardButton('👎', callback_data='dislike')],
