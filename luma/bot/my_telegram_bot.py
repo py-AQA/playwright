@@ -1,32 +1,40 @@
+import logging
 from typing import Final
 
 from dotenv import dotenv_values
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters
 
-##### Создание общего функционала самого бота                  ####
-##### Здесь находиться общие команды которые обрабатывает бот  ####
-##### Можно добавить свои обработчики команд                   ####
-
-
 settings: dict = dotenv_values(".env")
 bot_token = settings.get("TOKEN")
 BOT_USERNAME: Final = '@gromamicon_bot'
+caps_mode = False
+
+
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG
+)
+logger = logging.getLogger(__name__)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logging.warning(context)
     await context.bot.send_message(chat_id=update.effective_chat.id, text="Hello! Thank you for chatting with me!")
 
 
 async def caps(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # message_type: str = update.message.chat.type
-    # text: str = update.message.text
-    # text_caps = text.join(context.args).upper()
-    # await context.bot.send_message(chat_id=update.effective_chat.id, text=text_caps)
-    # print(f'User({update.message.chat.id}) in {message_type}: "{text}"')
+    global caps_mode
+    caps_mode = True
+    await update.message.reply_text("Caps mode is ON!")
+    # text = update.message.text
+    # await update.message.reply_text(text.upper())
 
-    text_caps = ' '.join(context.args).upper()
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=text_caps)
+
+async def stop_caps(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    global caps_mode
+    caps_mode = False
+    await update.message.reply_text("Caps mode is OFF!")
+
 
 async def custom_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="This is custom command!")
@@ -52,6 +60,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text: str = update.message.text
     print(f'User({update.message.chat.id}) in {message_type}: "{text}"')
 
+    if caps_mode:
+        text = text.upper()
+    else:
+        text = text.lower()
+
     if message_type == 'group':
         if BOT_USERNAME in text:
             new_text: str = text.replace(BOT_USERNAME, '').strip()
@@ -61,11 +74,26 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         response: str = handle_response(text)
 
-    print('Bot:', response)
+    if response == handle_response(text):
+        print('Bot:', response)
+        await update.message.reply_text(response)
 
-    # вызывает ошибку - бот не отвечает в телеге, но в пайчарм в начале сообщения-фейл есть правильный ответ бота
-    # await context.bot.send_message(update.message.reply_text(response))
-    await update.message.reply_text(response)
+    if response != handle_response(text):
+        print('Bot:', text)
+    await update.message.reply_text(text)
+
+
+async def selector_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message.text == "/caps":
+        await caps(update, context)
+    elif update.message.text == "/stop_caps":
+        await stop_caps(update, context)
+    else:
+        await handle_message(update, context)
+
+
+def error(bot, update, error):
+    logging.warning('Update "%s" caused error "%s"' % (update, error))
 
 
 def main():
@@ -75,8 +103,8 @@ def main():
     application.add_handler(CommandHandler('caps', caps))
     application.add_handler(CommandHandler("custom", custom_command))
     # My Message
-    application.add_handler(MessageHandler(filters.TEXT, handle_message))
-
+    application.add_handler(MessageHandler(filters.TEXT, selector_handler))
+    application.add_error_handler()
     application.run_polling()
 
 
