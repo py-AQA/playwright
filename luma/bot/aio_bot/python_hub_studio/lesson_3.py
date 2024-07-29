@@ -8,7 +8,7 @@ from typing import Final
 from aiogram import Bot, Dispatcher, types
 from dotenv import load_dotenv
 
-from luma.bot.aio_bot.python_hub_studio.bot_cmd_list import private
+from luma.bot.aio_bot.python_hub_studio.bot_cmd_list_les_3 import private
 from luma.bot.aio_bot.python_hub_studio.handlers.user_group import user_group_router
 from luma.bot.aio_bot.python_hub_studio.handlers.user_private_for_lesson_3 import user_private_router
 
