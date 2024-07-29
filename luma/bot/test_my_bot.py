@@ -1,3 +1,4 @@
+import asyncio
 import os
 from typing import Final
 
@@ -23,8 +24,10 @@ client = TelegramClient(StringSession(telethon_session), int(api_id), api_hash)
 async def test_bot_say_hi():
     await client.connect()
     await client.send_message(BOT_USERNAME, '/start')
-    # response = await client.get_messages(BOT_USERNAME)
-    # print(response)
+    await client.send_message(BOT_USERNAME, 'hello')
+    await asyncio.sleep(2)
+    async for message in client.iter_messages(BOT_USERNAME, limit=1):
+        assert message.text == 'hey there'
 
 
 
