@@ -19,19 +19,19 @@ async def menu_cmd(message: types.Message):
 
 
 @user_private_router.message(F.text.lower() == "о нас")
-@user_private_router.message(Command("about"))
+# @user_private_router.message(Command("about"))
 async def about_cmd(message: types.Message):
     await message.answer("Информация о нас")
 
 
 @user_private_router.message(F.text.lower() == "варианты оплаты")
-@user_private_router.message(Command("payment"))
+# @user_private_router.message(Command("payment"))
 async def payment_cmd(message: types.Message):
     await message.answer("Варианты оплаты ")
 
 
 @user_private_router.message(F.text.lower().contains("доставк")) | (F.text.lower() == "варианты доставки")
-@user_private_router.message(Command("shipping"))
+# @user_private_router.message(Command("shipping"))
 async def shipping_cmd(message: types.Message):
     await message.answer("Варианты доставки")
 
