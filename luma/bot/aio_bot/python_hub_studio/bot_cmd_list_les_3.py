@@ -1,8 +1,9 @@
 from aiogram.types import BotCommand
 
 private = [
-    BotCommand(command="menu", description=" watch menu"),
+    BotCommand(command="start", description="start_bot"),
+    BotCommand(command="menu", description=" О нас'"),
     BotCommand(command="about", description=" about us"),
-    BotCommand(command="payment", description=" payment options"),
-    BotCommand(command="shipping", description="delivery options")
+    BotCommand(command="payment", description="Варианты оплаты"),
+    BotCommand(command="shipping", description="Варианты доставки")
 ]
