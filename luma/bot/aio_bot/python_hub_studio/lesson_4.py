@@ -3,6 +3,7 @@ import os
 from typing import Final
 
 from aiogram import Bot, Dispatcher, types
+from aiogram.client.default import DefaultBotProperties
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
@@ -16,7 +17,8 @@ bot_token = os.getenv("TOKEN")
 BOT_USERNAME: Final = '@gromamicon_bot'
 print(bot_token)
 
-bot = Bot(bot_token) # parse_mode=ParseMode.HTML)
+bot = Bot(bot_token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+
 dp = Dispatcher()
 dp.include_router(user_private_router)
 dp.include_router(user_group_router)
@@ -33,5 +35,14 @@ async def main():
 
 asyncio.run(main())
 
-""" Смотри 
+""" 
+F.text.startswith("show") фильтр теста  - тест начинается с слова "show"
+F.text.endswith("example")) - тест заканчивается  словом  "example"
+
+and_f(F.text.startswith("show"), F.text.endswith("example")) - объединение условий  and_f
+
+or_f(F.text(text="hi"), CommandStart()) - запуск по команде ИЛИ по тексту
+
+@user_private_router.message(~(F.text.lower().contains ("варианты доставки")))
+будет срабатывать при всех условиях, кроме "варианты доставки"
 """
