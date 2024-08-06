@@ -1,7 +1,7 @@
 from string import punctuation
 
 from aiogram import types, Router
-from luma.bot.aio_bot.python_hub_studio.filters.chat_types import ChatTypesFilter
+from luma.bot.aio_bot.python_hub_studio.lesson3.filters.chat_types import ChatTypesFilter
 
 user_group_router = Router()
 user_group_router.message.filter(ChatTypesFilter(["group"]))
