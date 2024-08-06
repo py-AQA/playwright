@@ -1,6 +1,6 @@
 from aiogram import types, Router, F
 from aiogram.filters import CommandStart, Command
-from luma.bot.aio_bot.python_hub_studio.filters.chat_types import ChatTypesFilter
+from luma.bot.aio_bot.python_hub_studio.lesson3.filters.chat_types import ChatTypesFilter
 
 
 user_private_router = Router()

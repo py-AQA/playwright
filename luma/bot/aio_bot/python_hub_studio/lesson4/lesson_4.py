@@ -4,15 +4,14 @@ from typing import Final
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from dotenv import load_dotenv, find_dotenv
 
-load_dotenv(find_dotenv())
-from aiogram.enums import ParseMode
-from luma.bot.aio_bot.python_hub_studio.bot_cmd_list_les_3 import private
-from luma.bot.aio_bot.python_hub_studio.handlers.user_group import user_group_router
-from luma.bot.aio_bot.python_hub_studio.handlers.user_private_4 import user_private_router
+from bot_cmd_list_4 import private
+from handlers.user_group_4 import user_group_router
+from handlers.user_private_4 import user_private_router
 
-load_dotenv()
+load_dotenv(find_dotenv())
 bot_token = os.getenv("TOKEN")
 BOT_USERNAME: Final = '@gromamicon_bot'
 print(bot_token)
@@ -33,7 +32,13 @@ async def main():
     await dp.start_polling(bot, allowed_updates=ALLOW_UPDATES)
 
 
-asyncio.run(main())
+if __name__ == '__main__':
+    try:
+        asyncio.set_event_loop(asyncio.new_event_loop())
+        asyncio.get_event_loop().run_until_complete(main())
+    except KeyboardInterrupt:
+        print("Program was interrupted by the user.")
+
 
 """ 
 F.text.startswith("show") фильтр теста  - тест начинается с слова "show"
@@ -45,4 +50,12 @@ or_f(F.text(text="hi"), CommandStart()) - запуск по команде ИЛ�
 
 @user_private_router.message(~(F.text.lower().contains ("варианты доставки")))
 будет срабатывать при всех условиях, кроме "варианты доставки"
+
+Блок:
+if __name__ == '__main__':
+    try:
+        asyncio.set_event_loop(asyncio.new_event_loop()) ...........
+        Добавлен, чтоб исключить ошибку при остановке программы вручную
+  
+
 """

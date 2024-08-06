@@ -5,7 +5,7 @@ from typing import Final
 from aiogram import Bot, Dispatcher
 from dotenv import load_dotenv
 
-from luma.bot.aio_bot.python_hub_studio.handlers.user_private_for_lesson_2 import user_private_router
+from luma.bot.aio_bot.python_hub_studio.lesson2.user_private_2 import user_private_router
 
 load_dotenv()
 bot_token = os.getenv("TOKEN")
