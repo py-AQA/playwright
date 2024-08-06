@@ -1,11 +1,12 @@
 from aiogram import types, Router, F
-# from luma.bot.aio_bot.python_hub_studio.keyboards.reply_les4 import del_kbd, start_kb2
-from aiogram.enums import ParseMode
+# from luma.bot.aio_bot.python_hub_studio.lesson4.keyboards.reply_les4 import del_kbd, start_kb2
+# from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command, or_f
+from aiogram.utils.formatting import as_list, as_marked_section, Bold
+from luma.bot.aio_bot.python_hub_studio.lesson4.filters.chat_types_4 import ChatTypesFilter
+# from luma.bot.aio_bot.python_hub_studio.lesson4.keyboards import reply_les4
+from luma.bot.aio_bot.python_hub_studio.lesson4.keyboards.reply_les4 import start_kb3
 
-from luma.bot.aio_bot.python_hub_studio.filters.chat_types import ChatTypesFilter
-# from luma.bot.aio_bot.python_hub_studio.keyboards import reply_les4
-from luma.bot.aio_bot.python_hub_studio.keyboards.reply_les4 import start_kb3
 
 user_private_router = Router()
 user_private_router.message.filter(ChatTypesFilter(['private']))
@@ -16,9 +17,9 @@ user_private_router.message.filter(ChatTypesFilter(['private']))
 #     await message.answer(" Привет! Я ваш помощник", reply_markup=reply_les4.start_kb)
 
 
+"""Функция вызова клавиатуры_2"""
 # @user_private_router.message(CommandStart())
 # async def start_cmd(message: types.Message):
-#     """Функция вызова клавиатуры_2"""
 #     await message.answer(" Привет! Я ваш помощник", reply_markup=start_kb2.as_markup(
 #         resize_keyboard=True, input_field_placeholder="What do you interesting?"))
 
@@ -46,7 +47,7 @@ async def menu_cmd(message: types.Message):
     """
 
 
-@user_private_router.message(or_f(Command("about"), (F.text.lower() == "о нас")))
+@user_private_router.message(or_f(Command("about"), (F.text.lower() == "о магазине")))
 # @user_private_router.message(F.text.lower() == "о нас")
 # @user_private_router.message(Command("about"))
 async def about_cmd(message: types.Message):
@@ -57,18 +58,46 @@ async def about_cmd(message: types.Message):
 # @user_private_router.message(F.text.lower() == "варианты оплаты")
 # @user_private_router.message(Command("payment"))
 async def payment_cmd(message: types.Message):
-    print(F.text)
-    await message.answer("Выбери варианты оплаты ")
+    # await message.answer("Выбери варианты оплаты ")
+    text = as_marked_section(
+        Bold("Варианты оплаты:"),
+        "Картой в боте",
+        "При получении карта/кеш",
+        "В заведении",
+        marker='✅ '
+    )
+    await message.answer(text.as_html())
 
 
+@user_private_router.message(or_f(Command("shipping"),
+                                  (F.text.lower().contains("доставк")) | (F.text.lower() == "варианты доставки")))
 
-# @user_private_router.message(or_f(Command("shipping"), (F.text.lower() == "варианты доставки")))
-@user_private_router.message((F.text.lower().contains("доставк")) | (F.text.lower() == "варианты доставки"))
-@user_private_router.message(Command("shipping"))
+# @user_private_router.message((F.text.lower().contains("доставк")) | (F.text.lower() == "варианты доставки"))
+# @user_private_router.message(Command("shipping"))
 async def shipping_cmd(message: types.Message):
-    # await message.answer("Выбери варианты доставки")
+    await message.answer("Выбери варианты доставки")
     #  parse_mode=ParseMode.HTML во все хендлеры ставить не красиво, укажем его в lesson4, bot
-    await message.answer("<b>Выбери варианты доставки</b>", parse_mode=ParseMode.HTML)
+    # await message.answer("<b>Выбери варианты доставки</b>", parse_mode=ParseMode.HTML)
+    text = as_list(
+        as_marked_section(
+            Bold("Варианты доставки/заказа:"),
+            "Курьер",
+            "Самовынос (сейчас прибегу заберу)",
+            "Покушаю у Вас (сейчас прибегу)",
+            marker='✅ '
+        ),
+        as_marked_section(
+            Bold("Нельзя:"),
+            "Почта",
+            "Голуби",
+            marker='❌ '
+        ),
+        sep='\n----------------------\n'
+    )
+    await message.answer(text.as_html())
+
+
+
 
 
 @user_private_router.message(F.contact)
@@ -103,5 +132,14 @@ async def get_location(message: types.Message):
 
 @user_private_router.message(~(F.text.lower().contains ("варианты доставки")))
 будет срабатывать при всех условиях, кроме "варианты доставки"
+
+#  parse_mode=ParseMode.HTML во все хендлеры ставить не красиво, укажем его в lesson4, bot
+# await message.answer("<b>Выбери варианты доставки</b>", parse_mode=ParseMode.HTML)
+
+#  в объекте location будет находиться вся информация
+#  после contact ставим точку и смотрим информацию (Долгота, широта и т.д.)
+
+#  в объекте contact будет находиться вся информация
+#  после contact ставим точку и смотрим информацию (номер телефона,ФИО и т.д.)
 
 """

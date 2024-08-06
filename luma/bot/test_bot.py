@@ -105,7 +105,7 @@ async def test_inline_key_button_menu(client):
 
             await asyncio.sleep(1)
         async for message in client.iter_messages(BOT_USERNAME, limit=1):
-            "Сравниваем тест ответа бота, после клика кнопки на частичное совпадение"
+            "Сравниваем тест ответа бота, после клика кнопки на совпадение по тексту в начале смс"
             assert message.text.startswith("Несмотря на ")
 
         await asyncio.sleep(1)
@@ -177,15 +177,4 @@ async def test_inline_key_button_description(client):
     asyncio.gather()
     asyncio.wait()
     """
-
-    """messages[0].reply_markup.rows[0].buttons[0].data
-GetBotCallbackAnswerRequest is what "presses" or "interacts" the buttons, and you linked to the right place indeed. 
-What's your issue exactly? With messages[0].reply_markup.rows[0].buttons[0].data you access the data, with the linked:
-from telethon.tl.functions.messages import GetBotCallbackAnswerRequest
-
-client(GetBotCallbackAnswerRequest(user_or_chat, msg.id, 
-data=msg.reply_markup.rows[wanted_row].buttons[wanted_button].data) """
-
-# client(GetBotCallbackAnswerRequest(BOT_USERNAME, message.id, data=message.reply_markup.rows[0].buttons[0].data))
-
-
+    
