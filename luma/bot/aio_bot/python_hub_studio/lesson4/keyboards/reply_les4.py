@@ -57,10 +57,7 @@ test_kb = ReplyKeyboardMarkup(
 
  request_poll=KeyboardButtonPollType()) - Сделать опрос
  
- 
  Эти кнопки не отправляют в чат, то что на них написано
 KeyboardButton(text="Отправить номер ☎️", request_contact=True),
 KeyboardButton(text="Отправить локацию 🗺️", request_location=True)
-
-        
 """
