@@ -42,7 +42,7 @@ async def delete_product(message: types.Message):
 
 # Код ниже для машины состояний (FSM) СМОТРИ ОПИСАНИЕ ВНИЗУ
 
-class Addproduct(StatesGroup):
+class AddProduct(StatesGroup):
     name = State()
     description = State()
     price = State()
