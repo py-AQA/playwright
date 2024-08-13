@@ -42,79 +42,134 @@ async def delete_product(message: types.Message):
 
 # Код ниже для машины состояний (FSM) СМОТРИ ОПИСАНИЕ ВНИЗУ
 
-class Addproduct(StatesGroup):
+class AddProduct(StatesGroup):
     name = State()
     description = State()
     price = State()
     image = State()
 
+    texts = {
+        'AddProduct:name': 'Введите название заново:',
+        'AddProduct:description': 'Введите описание заново:',
+        'AddProduct:price': 'Введите стоимость заново:',
+        'AddProduct:image': 'Этот стейт последний, поэтому...',
+    }
 
+
+# Становимся в состояние ожидания ввода name
 @admin_router.message(StateFilter(None), F.text == "Добавить товар")
 async def add_product(message: types.Message, state: FSMContext):
-    # Реакция на кнопку "Добавить товар"- ожидание что юзер введет название конкретного товара пишем "Введите название
+    # Реакция на кнопку "Добавить товар"- ожидание что админ введет название конкретного товара пишем "Введите название
     # товара" и удаляем нашу кнопочную клавиатуру, что бы отобразилась обычная клавиатура ввода текста.
     # Это состояние ожидания ответа
     await message.answer(
         "Введите название товара", reply_markup=types.ReplyKeyboardRemove()
     )
     # Становимся в режим ожидания
-    await state.set_state(Addproduct.name)
+    await state.set_state(AddProduct.name)
 
 
-@admin_router.message(Command("отмена"))
-@admin_router.message(F.text.casefold() == "отмена")
+@admin_router.message(StateFilter("*"), Command("отмена"))
+@admin_router.message(StateFilter("*"), F.text.casefold() == "отмена")
 async def cancel_handler(message: types.Message, state: FSMContext) -> None:
+
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+
+    await state.clear()
     await message.answer("Действия отменены", reply_markup=ADMIN_KB)
 
+    """ Делаем проверку, StateFilter("*") что любые state допустимы,
+    если юзер находится в каком-то из этих состояний 
+метод casefold - работает как lower , но поддерживает большее количество символов
+если админ ввел это тест сообщение или команду "отмена"  но у него нет активного диалога (отсутствует состояние), 
+то завершаем работу этого хендлера , в ином случае
+ state.clear() -сбрасываем состояние  
+ и отправляем смс "Действия отменены" и возвращаем раскладку клавиатуры  для работы с товаром
 
-@admin_router.message(Command("назад"))
-@admin_router.message(F.text.casefold() == "назад")
-async def cancel_handler(message: types.Message, state: FSMContext) -> None:
-    await message.answer(f"ок, вы вернулись к прошлому шагу")
+ФУНКЦИЯ "ОТМЕНА" ОБНУЛЯЕТ ВСЮ ИНФОРМАЦИЮ, НУЖНО ВВОДИТЬ ВСЕ СНАЧАЛА
+"""
 
 
-@admin_router.message(Addproduct.name, F.text)
+@admin_router.message(StateFilter("*"), Command("назад"))
+@admin_router.message(StateFilter("*"), F.text.casefold() == "назад")
+async def back_step_handler(message: types.Message, state: FSMContext) -> None:
+
+    current_state = await state.get_state()  # Получаем текущее состояние
+
+    if current_state == AddProduct.name:  # Возвращаться назад некуда
+        await message.answer("Предыдущего шага нет, введите название товара или напишите отмена")
+        return
+# Нужно получить предыдущее состояние которое было
+    previous = None
+    # Проходимся по всем состояниям циклом
+    for step in AddProduct.__all_states__:
+        if step.state == current_state:
+            await state.set_state(previous)  # Если условие выше выполняется, то мы приравниваем его к (previous)
+            await message.answer(f"ок, вы вернулись к прошлому шагу \n {AddProduct.texts[previous.state]}")
+            return
+        previous = step
+
+
+# Ловим данные для состояния name и потом меняем состояние на description
+@admin_router.message(AddProduct.name, F.text)
 # Ожидаем что будет введен текст. Нужно этот текст перехватить, записать в хранилище,
 # отправить юзеру "Введите описание товара" и встать в состояние ожидания ввода описания товара
 async def add_name(message: types.Message, state: FSMContext):
     await state.update_data(name=message.text)  # Приняли имя товара
     await message.answer("Введите описание товара")
-    await state.set_state(Addproduct.description)  # ожидаем ввода описания
+    await state.set_state(AddProduct.description)  # ожидаем ввода описания
 
 
-@admin_router.message(Addproduct.description, F.text)  # Проверка состояния, что готовы принять описание
+# Хендлер для отлова некорректных вводов для состояния description
+@admin_router.message(AddProduct.description)
+async def add_description2(message: types.Message, state: FSMContext):
+    await message.answer("Вы ввели не допустимые данные, введите текст описания товара")
+
+
+# Ловим данные для состояния description и потом меняем состояние на price
+@admin_router.message(AddProduct.description, F.text)  # Проверка состояния, что готовы принять описание
 # описание товара записываем в хранилище,
 # отправляем юзеру "Введите стоимость товара" и становимся в состояние ожидания ввода стоимость товара
 async def add_description(message: types.Message, state: FSMContext):
     await state.update_data(description=message.text)  # Приняли описание
     await message.answer("Введите стоимость товара")
-    await state.set_state(Addproduct.price)
+    await state.set_state(AddProduct.price)
 
 
-@admin_router.message(Addproduct.price, F.text)
+# Ловим данные для состояние price и потом меняем состояние на image
+@admin_router.message(AddProduct.price, F.text)
 async def add_price(message: types.Message, state: FSMContext):
     # ожидаем загрузку фото
     await state.update_data(price=message.text)
     await message.answer("Загрузите изображение товара")
-    await state.set_state(Addproduct.image)
+    await state.set_state(AddProduct.image)
 
 
-@admin_router.message(Addproduct.image, F.photo)
+# Хендлер для отлова некорректных данных ввода состояния price
+@admin_router.message(AddProduct.price)
+async def add_price2(message: types.Message, state: FSMContext):
+    await message.answer("Вы ввели не допустимые данные, введите стоимость товара")
+
+
+# Ловим данные для состояния image и потом выходим из состояний
+@admin_router.message(AddProduct.image, F.photo)
 async def add_image(message: types.Message, state: FSMContext):
-    # ждем фото , после добавления всех данных в Базу Данных отправляем клавиатуру админа
+    # ждем фото, после добавления всех данных в Базу Данных отправляем клавиатуру админа
     await state.update_data(image=message.photo[-1].file_id)
 
     """ 
-    Если  юзер отправляет F.photo
+    Если  админ отправляет F.photo
     state.update_data(image=message.photo[-1].file_id) 
     когда вы отправляете фото, изображение на серверах телеграмма обрабатывается в разных разрешениях 
     (они  перечислены в виде списка). 
-    photo[-1] формат с самым большим разрешением 
+    photo[-1] формат с самым большим разрешением. 
     """
     await message.answer("Товар добавлен", reply_markup=ADMIN_KB)
     data = await state.get_data()  # получаем словарь с нашими значениями
     await message.answer(str(data))  # отправим наши данные в чат в виде str
-    await state.clear()  # очистка состояний пользователя и удаление данных из памяти ОЗУ
+    await state.clear()  # очистка состояний пользователя и удаление данных из машины состояний
 
 """
 Хендлеры которые для админа, должны  работать только для админа. Делаем чат фильтр  isAdmin.
@@ -135,8 +190,6 @@ bot.my_admins_list = admins_list получает список.
 Гибко менять список админов.
 Запрос к API телеграмма делается 1 раз при запросе списка в группе
 """
-
-
 
 
 """Машина состояний!:
@@ -170,7 +223,7 @@ async def add_image(message: types.Message, state: FSMContext):
 
 async def add_name(message: types.Message, state: FSMContext):
     await state.update_data(name=message.text) -получить название товара 
-    await message.answer("Введите описание товара") -отправляем  юзеру
+    await message.answer("Введите описание товара") -отправляем  смс а
 
 await state.set_state(Addproduct.description)  # ожидаем ввода описания / меняем состояние юзера
     
