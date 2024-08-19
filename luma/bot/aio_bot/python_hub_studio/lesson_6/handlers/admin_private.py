@@ -20,7 +20,6 @@ from luma.bot.aio_bot.python_hub_studio.lesson_6.keyboards.reply import get_keyb
 admin_router = Router()
 admin_router.message.filter(ChatTypesFilter(["private"]), IsAdmin())
 
-
 ADMIN_KB = get_keyboard(
     "Добавить товар",
     "Ассортимент",
@@ -73,21 +72,24 @@ async def starring_at_product(message: types.Message, session: AsyncSession):
 
 @admin_router.callback_query(F.data.startswith("delete_"))
 async def delete_product_callback(callback: types.CallbackQuery, session: AsyncSession):
-
     product_id = callback.data.split("_")[-1]
-    await orm_delete_product(session, int(product_id))
+    # обращаемся к callback data и поучаем строку delete_, но нужно разделить поэтому .split("_")
+    # разбиваем строку по _ и получаем последний элемент [-1]
 
-    await callback.answer("Товар удален")
+    await orm_delete_product(session, int(product_id))  # переводим в int product_id который получили
+
+    await callback.answer("Товар удален")  # покажет всплывающее окно с текстом
+    # Здесь есть метод show_alert : bool - который если  выставить с True покажет оповещение с кнопкой "OK".
+    # Убрать оповещение можно только нажав "OK"
     await callback.message.answer("Товар удален!")
 
 
 # ===============  FSM    ========================:
 # Становимся в состояние ожидания ввода name
 @admin_router.callback_query(StateFilter(None), F.data.startswith("change_"))
-async def change_product_callback( callback: types.CallbackQuery, state: FSMContext, session: AsyncSession):
-
-    product_id = callback.data.split("_")[-1]
-    product_for_change = await orm_get_product(session, int(product_id))
+async def change_product_callback(callback: types.CallbackQuery, state: FSMContext, session: AsyncSession):
+    product_id = callback.data.split("_")[-1]  # получаем id продукта, который изменяется
+    product_for_change = await orm_get_product(session, int(product_id))  # получаем все данные продукта, который изменяется
     AddProduct.product_for_change = product_for_change
 
     await callback.answer()
@@ -144,12 +146,12 @@ async def back_step_handler(message: types.Message, state: FSMContext) -> None:
 # Ловим данные для состояния "name" и потом меняем состояние на "description"
 @admin_router.message(AddProduct.name, or_f(F.text, F.text == "."))
 async def add_name(message: types.Message, state: FSMContext):
-    if message.text == ".":
+
+    if message.text == ".":  # Если ввести точку, то оставить старое название
         await state.update_data(name=AddProduct.product_for_change.name)
+        # Если имя - точка, то когда обновляем данные в словаре, будем брать название,
+        # которое там указано - name=AddProduct.product_for_change.name
     else:
-        # Здесь можно сделать какую либо дополнительную проверку
-        # и выйти из хендлера не меняя состояние с отправкой соответствующего сообщения
-        # например:
         if len(message.text) >= 100:
             await message.answer(
                 "Название товара не должно превышать 100 символов. \n Введите заново"

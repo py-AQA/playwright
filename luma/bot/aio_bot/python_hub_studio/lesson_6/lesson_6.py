@@ -88,4 +88,9 @@ if __name__ == '__main__':
 pip install sqlalchemy
 pip install aiosqlite
 pip install asyncpg    - установка PostgreSQL
+
+pip install aiomysql - MySQl
+
+pip install mysql-connector-python   библиотека для не асинхронной работы
+
 """

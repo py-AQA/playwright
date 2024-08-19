@@ -7,16 +7,12 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from .models import Base
 
-#from .env file:
-# DB_LITE=sqlite+aiosqlite:///my_base.db
-# DB_URL=postgresql+asyncpg://login:password@localhost:5432/db_name
-
 load_dotenv(find_dotenv())
-
-engine = create_async_engine(os.getenv('DB_LITE'), echo=True)
+#
+# engine = create_async_engine(os.getenv('DB_LITE'), echo=True)
 """echo=True выводит все запросы в терминал"""
 
-# engine_2 = create_async_engine(os.getenv('DB_URL'), echo=True)
+engine = create_async_engine(os.getenv('DB_URL'), echo=True)
 
 session_maker = async_sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
 """bind=engine - движок который инициализировали
