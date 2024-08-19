@@ -3,7 +3,7 @@ from string import punctuation
 from aiogram import types, Router, Bot
 from aiogram.filters import Command
 
-from luma.bot.aio_bot.python_hub_studio.lesson5.filters.chat_types_5 import ChatTypesFilter
+from luma.bot.aio_bot.python_hub_studio.lesson_6.filters.chat_types import ChatTypesFilter
 
 user_group_router = Router()
 user_group_router.message.filter(ChatTypesFilter(["group", "supergroup"]))
