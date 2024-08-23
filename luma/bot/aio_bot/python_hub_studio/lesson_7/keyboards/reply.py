@@ -10,7 +10,6 @@ def get_keyboard(
         request_contact: int = None,
         request_location: int = None,
         sizes: tuple[int] = (2,), ):
-
     """
     Parameters request_contact and request_location must be as indexes of btns (buttons) args for buttons you need.
     Example:
@@ -26,6 +25,7 @@ def get_keyboard(
         )
         "Отправить номер телефона" пятая кнопка, но индекс 4
     """
+
     # Формируется клавиатура
     keyboard = ReplyKeyboardBuilder()
     # автоматическая генерация индексов каждой кнопки
@@ -46,6 +46,6 @@ def get_keyboard(
 
 
 """
-Создаем функцию, которая генерирует любые кнопки
+
         
 """

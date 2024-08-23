@@ -1,3 +1,5 @@
+
+"""========   Асинхронная SqlAlchemy | База Данных в Telegram боте  ==============="""
 import asyncio
 import os
 from typing import Final
