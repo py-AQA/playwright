@@ -56,22 +56,23 @@ async def orm_add_banner_description(session: AsyncSession, data: dict):
     # Добавляем новый или изменяем существующий по именам
     # пунктов меню: main, about, cart, shipping, payment, catalog
 
-    """ Получаем словарь data, делаем выборку из таблицы баннер query = select(Banner),
-    проверяем наличие.
-    Если она там есть, то выходим if result.first(): return.
-    Если нет, то добавляем session.add_all(...........). То же самое с категориями.
-    """
+    # """ Получаем словарь data, делаем выборку из таблицы баннер query = select(Banner),
+    # проверяем наличие.
+    # Если она там есть, то выходим if result.first(): return.
+    # Если нет, то добавляем session.add_all(...........). То же самое с категориями.
+    # """
 
     query = select(Banner)
     result = await session.execute(query)
     if result.first():
         return
     session.add_all([Banner(name=name, description=description) for name, description in data.items()])
+    # Banner(name=name, description=description -имя и описание под  картинкой банера
     await session.commit()
 
 
 async def orm_change_banner_image(session: AsyncSession, name: str, image: str):
-    query = update(Banner).where(Banner.name == name).values(image=image)
+    query = update(Banner).where(Banner.name == name).values(image=image)  # передаем имя и картинку
     await session.execute(query)
     await session.commit()
 

@@ -30,10 +30,10 @@ async def create_db():  # Запускаем функции в lesson_7
         # conn.run_sync В SqlAlchemy нет этого метода в асинхронном варианте нет
         # (Base.metadata.create_all) Обращаемся к классу Base из файла models, чтоб создать все таблицы
 
-    """ открываем сессию и используем функции orm_create_categories, orm_add_banner_description, чтобы при старте 
-    они были записаны в БД, в том числе и описание для страниц банеров
-    orm запросы написаны так, что если там уже есть записи, то этого происходить не будет
-     """
+        # """ открываем сессию и используем функции orm_create_categories, orm_add_banner_description, чтобы при старте
+        # они были записаны в БД, в том числе и описание для страниц банеров
+        # orm запросы написаны так, что если там уже есть записи, то этого происходить не будет
+        #  """
 
     async with session_maker() as session:
         await orm_create_categories(session, categories)

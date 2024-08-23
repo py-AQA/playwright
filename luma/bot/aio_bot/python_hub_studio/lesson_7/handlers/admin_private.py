@@ -87,19 +87,34 @@ async def add_image2(message: types.Message, state: FSMContext, session: AsyncSe
                          \n{', '.join(pages_names)}")
     await state.set_state(AddBanner.image)
 
+""" Здесь добавляются банеры (картинки) для страниц ( о магазине, о вариантах доставки, ...
+ ( main, catalog, cart(корзины), about, payment, shipping , эти названия берутся из БД .))
+ Мы указали какой текст будет там написан.
+ Сюда отправляется этот текст  и  формируется список orm_get_info_pages.
+ При добавлении банеров в боте, нужно писать в описании при добавлении название страницы  под картинкой.
+ Пример: страница о нас (about) значит в описании пишем about, тк страница также называется about
+ 
+  """
+
 
 # Добавляем/изменяем изображение в таблице (там уже есть записанные страницы по именам:
 # main, catalog, cart(для пустой корзины), about, payment, shipping
 @admin_router.message(AddBanner.image, F.photo)
 async def add_banner(message: types.Message, state: FSMContext, session: AsyncSession):
     image_id = message.photo[-1].file_id
-    for_page = message.caption.strip()
+    for_page = message.caption.strip()  # текст указанный в описании картинки при добавлении в боте
+    # strip() удаляет лишние пробелы в конце
     pages_names = [page.name for page in await orm_get_info_pages(session)]
+    # Проверяем что введено корректное название из списка
+
     if for_page not in pages_names:
+        # если описание не входит в список
         await message.answer(f"Введите нормальное название страницы, например:\
                          \n{', '.join(pages_names)}")
         return
     await orm_change_banner_image(session, for_page, image_id, )
+    # передаем for_page (описание банера) в нужную страницу из списка (main, about и тд)
+
     await message.answer("Баннер добавлен/изменен.")
     await state.clear()
 
@@ -116,9 +131,9 @@ class AddProduct(StatesGroup):
     # Шаги состояний
     name = State()
     description = State()
+    category = State()
     price = State()
     image = State()
-    category = State()
 
     product_for_change = None
 
@@ -236,6 +251,7 @@ async def add_description(message: types.Message, state: FSMContext, session: As
     categories = await orm_get_categories(session)
     btns = {category.name: str(category.id) for category in categories}
     await message.answer("Выберите категорию", reply_markup=get_callback_btns(btns=btns))
+    #  становимся в состояние AddProduct.category и отправляем callback кнопки "еда" и "напитки"
     await state.set_state(AddProduct.category)
 
 
@@ -249,12 +265,13 @@ async def add_description2(message: types.Message, state: FSMContext):
 @admin_router.callback_query(AddProduct.category)
 async def category_choice(callback: types.CallbackQuery, state: FSMContext, session: AsyncSession):
     if int(callback.data) in [category.id for category in await orm_get_categories(session)]:
+        # если введенное юзером смс есть в списке категорий, то добавляем товар
         await callback.answer()
         await state.update_data(category=callback.data)
         await callback.message.answer('Теперь введите цену товара.')
         await state.set_state(AddProduct.price)
     else:
-        await callback.message.answer('Выберите катеорию из кнопок.')
+        await callback.message.answer('Выберите категорию из кнопок.')
         await callback.answer()
 
 
@@ -267,7 +284,7 @@ async def category_choice2(message: types.Message, state: FSMContext):
 # Ловим данные для состояния price и потом меняем состояние на image
 @admin_router.message(AddProduct.price, F.text)
 async def add_price(message: types.Message, state: FSMContext):
-    if message.text == "." and AddProduct.product_for_change:
+    if message.text == "." and AddProduct.product_for_change:  # "." оставить старое название в поле ввода
         await state.update_data(price=AddProduct.product_for_change.price)
     else:
         try:

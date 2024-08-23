@@ -1,4 +1,3 @@
-
 """====================================Создание таблиц==============================================="""
 from sqlalchemy import func, DateTime, ForeignKey, Numeric, String, Text, BigInteger
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -28,7 +27,6 @@ class Category(Base):  # выбор категории: еда, напитки
     name: Mapped[str] = mapped_column(String(150), nullable=False)
 
 
-# создаем поля
 class Product(Base):  # таблица продуктов
     __tablename__ = 'product'
 
@@ -39,11 +37,12 @@ class Product(Base):  # таблица продуктов
     # Numeric(5, 2 ) может быть 5 знаков, 2 знака до запятой: = 7.99
 
     image: Mapped[str] = mapped_column(String(150))
-    category_id: Mapped[int] = mapped_column(ForeignKey('category.id', ondelete='CASCADE'), nullable=False)
-    # ForeignKey - внешний ключ - ссылка на таблицу 'category' поле id
-    # ondelete='CASCADE' - когда удаляется категория , будут удалены все продукты
 
+    category_id: Mapped[int] = mapped_column(ForeignKey('category.id', ondelete='CASCADE'), nullable=False)
     category: Mapped['Category'] = relationship(backref='product')
+
+    # ForeignKey - внешний ключ - ссылка на таблицу 'category' поле id
+    # ondelete='CASCADE' - когда удаляется категория, будут удалены все продукты категории
     # relationship(backref='product') -связь, чтоб делать выборку
 
 
@@ -66,25 +65,25 @@ class Cart(Base):  # корзина юзера
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)  # id записи в БД
     user_id: Mapped[int] = mapped_column(ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
 
-    """ ForeignKey('user.user_id' - ключ на  class User(Base): поле user_id (телеграмме)
-    Как только юзер удален из БД , будут удалены все корзины """
-
     product_id: Mapped[int] = mapped_column(ForeignKey('product.id', ondelete='CASCADE'), nullable=False)
     quantity: Mapped[int]  # поле количество
-    """ ForeignKey связывает 2 таблицы  class User(Base): и class Cart(Base): с одноименными полями
-    Как только товар  удален из БД , будут удалены все корзины с этим товаром"""
-
     user: Mapped['User'] = relationship(backref='cart')
     product: Mapped['Product'] = relationship(backref='cart')
-    """ через  relationship делаем взаимосвязь с таблицами  user и  product
-    Если юзер закажет 3 разных товара, то будет 3 корзины и в каждой будет лежать отдельный  товар product:id 
-     и его количество. В итоге мы будем брать информацию с всех записей"""
 
 
-"""
+""" ForeignKey('user.user_id' - ключ на  class User(Base): поле user_id (телеграмме)
+Как только юзер удален из БД , будут удалены все корзины.
+ 
+ForeignKey связывает 2 таблицы  class User(Base): и class Cart(Base): с одноименными полями
+Как только товар  удален из БД , будут удалены все корзины с этим товаром
+через  relationship делаем взаимосвязь с таблицами  user и  product.
+
+Если юзер закажет 3 разных товара, то будет 3 корзины и в каждой будет лежать отдельный  товар product:id 
+ и его количество. В итоге мы будем брать информацию с всех записей
+
+
 Ставим аннотацию с помощью класса Mapped, не вызываем его.
 указываем primary_key=True,  и авто-увеличение поля на 1 при заполнении autoincrement=True)
 Для поля name надо указать ограничение на количество символов, макс = 150 символов, nullable=False не может быть пустым
 Для поля  description, что это поле текст, а не varchar
-
 """
